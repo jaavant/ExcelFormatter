@@ -21,7 +21,7 @@ public class Main {
 	
 		//Get Cards from excel sheet
 		try {
-			cards = getCards("C:/Users/javant/Documents/Contacts");
+			cards = getCardsXL("C:\\Users\\javant\\My Documents\\Contacts");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,22 +36,30 @@ public class Main {
 		
 	}
 	
+	
+	private static ArrayList<BuissnessCard> getCardsRAW(String address) throws IOException{
+		ArrayList<BuissnessCard> bCards = new ArrayList<BuissnessCard>();
+
+		return bCards;
+	}
+	
+	
+	
 	/** Get's address of Excel document to read, then composes an array of B.C from reading file
 	 * 
 	 * @param address Path to file to read
 	 * @return	Array of B.C 
 	 * @throws IOException 
 	 */
-	private static ArrayList<BuissnessCard> getCards(String address) throws IOException{
+	@Deprecated private static ArrayList<BuissnessCard> getCardsXL(String address) throws IOException{
+		ArrayList<BuissnessCard> bCards = new ArrayList<BuissnessCard>();
 		File file;
 		FileInputStream fis;
 		XSSFWorkbook workbook;
 		XSSFSheet sheet;
 		Iterator<Row> rowIterator;
 		Row row;
-		Cell cell;
-		ArrayList<BuissnessCard> bCards = new ArrayList<BuissnessCard>();
-		
+		Cell cell;	
 
 			file = new File(address);
 			
@@ -71,6 +79,8 @@ public class Main {
 				row = rowIterator.next();	
 				cell = row.getCell(0);
 				bCards.add(new BuissnessCard(cell.getStringCellValue()));
+				
+				System.out.print(cell.getStringCellValue());
 			}		
 			workbook.close();
 		
