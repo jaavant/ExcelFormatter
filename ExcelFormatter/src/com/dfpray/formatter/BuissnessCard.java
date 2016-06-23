@@ -32,7 +32,9 @@ public class BuissnessCard {
 		processData();
 	}
 
-	
+	/**
+	 * Parses data to get the values for the rest of the empty fields in the object
+	 */
 	private void processData() {
 		
 		
