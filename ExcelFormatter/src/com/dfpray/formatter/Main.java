@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class Main {
+	@SuppressWarnings("resource")
 	public static void main(String args[]){
 		ArrayList<BuissnessCard> cards;
 		File file;
@@ -25,10 +26,14 @@ public class Main {
 
 		
 		try{
+			//Get file * Should be replaced by directory explorer
 			file = new File("C:/Users/javant/Documents/Contacts");
 			
+			//Open up stream
+			fis = new FileInputStream(file);
+			
 			//Create a Workbook instance
-			workbook = new XSSFWorkbook(file);
+			workbook = new XSSFWorkbook(fis);
 			
 			//Get first sheet form the workbook
 			sheet = workbook.getSheetAt(0);
