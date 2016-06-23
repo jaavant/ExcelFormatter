@@ -39,12 +39,21 @@ public class Main {
 		
 		ArrayList<BuissnessCard> bCards = new ArrayList<BuissnessCard>();
 		String line;
-		
+		boolean first = false;
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(address))){
 			//Check if no more lines with null
 			while((line = br.readLine()) != null){
+				
+				//Skip first line
+				if(!first){
+					first = true;
+					continue;
+				}
+				
 				bCards.add(new BuissnessCard(line));
+				
+				
 			}	
 		}
 		return bCards;
