@@ -1,35 +1,34 @@
 package com.dfpray.formatter;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.dfpray.data.BuissnessCard;
-import com.dfpray.data.CFInfo;
-import com.dfpray.data.Company;
-import com.dfpray.data.Contacts;
-import com.dfpray.data.Misc;
-import com.dfpray.data.Representative;
-import com.dfpray.exception.CardNotFoundException;
-import com.dfpray.exception.EmptyListException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.dfpray.data.*;
+import com.dfpray.exception.*;
+
 
 public class CardModel {
-	/* TODO 
-	 * Implement a way when finalizing cards that all cards have mandatory info
-	 * Check if deck is empty throw exception
-	*/
 	
-	private ArrayList<BuissnessCard> cards;
-	
+	private ArrayList<BusinessCard> cards;
+		
+		
 	
 	/**
-	 * Create a list of BuissnessCards from a path to a file
+	 * Create a list of BusinessCards from a path to a file
 	 * @param path Path to file
 	 */
 	public CardModel(String path){
-		cards = new ArrayList<BuissnessCard>();
+		cards = new ArrayList<BusinessCard>();
 	}
 	
 	public void addCards(String path) throws IncompleteException, IOException{
@@ -43,8 +42,8 @@ public class CardModel {
 	 * @return List of B.C 
 	 * @throws IOException
 	 */
-	private ArrayList<BuissnessCard> parseRAWCards(String address) throws IOException{	
-		ArrayList<BuissnessCard> bCards = new ArrayList<BuissnessCard>();
+	private ArrayList<BusinessCard> parseRAWCards(String address) throws IOException{	
+		ArrayList<BusinessCard> bCards = new ArrayList<BusinessCard>();
 		String line;
 		boolean first = false;
 		
@@ -60,7 +59,7 @@ public class CardModel {
 					continue;
 				}
 				
-				bCards.add(new BuissnessCard(line));
+				bCards.add(new BusinessCard(line));
 				
 				
 			}	
@@ -72,7 +71,7 @@ public class CardModel {
 	 * Returns cards
 	 * @return
 	 */
-	public ArrayList<BuissnessCard> getCards(){
+	public ArrayList<BusinessCard> getCards(){
 		return cards;
 	}
 	
@@ -81,7 +80,7 @@ public class CardModel {
 	 * @param card Card to be added
 	 * @throws IncompleteException 
 	 */
-	public void addCard(BuissnessCard card) throws IncompleteException{
+	public void addCard(BusinessCard card) throws IncompleteException{
 		cards.add(card);
 		checkCollision();
 	}
@@ -95,7 +94,7 @@ public class CardModel {
 	public void removeCard(UUID id) throws EmptyListException, CardNotFoundException{
 		if(cards.size() == 0) throw new EmptyListException();
 		
-		for(BuissnessCard card: cards){
+		for(BusinessCard card: cards){
 			if(card.getUI().equals(id)){
 				cards.remove(card);
 				return;
@@ -119,7 +118,7 @@ public class CardModel {
 	public void updateCard(UUID id, Contacts c, Representative r, Company com, CFInfo cf, Misc m, String info )throws EmptyListException, CardNotFoundException{
 		if(cards.size() == 0) throw new EmptyListException();		
 				
-		for(BuissnessCard card : cards){
+		for(BusinessCard card : cards){
 			if(card.getUI().equals(id)){
 				card.updateCard(c, r, com, cf, m, info);
 				return;
@@ -135,6 +134,63 @@ public class CardModel {
 	public int amtCards(){
 		return cards.size();
 	}
+	
+	/**
+	 * Checks if a file already exists
+	 * @param path Path to file
+	 * @return 
+	 */
+	public boolean fileExists(String path) throws IncompleteException{
+		File f = new File(path);
+		
+		//Check if we are looking at a file 
+		if(!f.isFile()) throw new IncompleteException("This is not a file");
+		
+		return f.exists();
+	}
+	
+	
+	/**
+	 * Exports List of B.C to Excel file, Path should include name and format .xlsx ending
+	 * @param path
+	 * @throws IOException 
+	 */
+	public void exportToExcel(String path) throws IOException{
+		//TODO finish method 
+		BusinessCard card; 
+		Row row;
+		Cell cell;
+		String[] info;
+		
+		//Create Blank workbook/sheet
+	      XSSFWorkbook workbook = new XSSFWorkbook();      
+	      XSSFSheet sheet = workbook.createSheet("Business Data");
+	      
+	      //Row = Business
+	      for(int i = 0; i < amtCards(); i++){
+	    	  row = sheet.createRow(i);
+	    	  card = cards.get(i);
+	    	  info = card.infoToArray();
+	    	  
+	    	  //Create Column = Data for each Business
+	    	  for(int k = 0; k < 30; k++){
+	    		  cell = row.createCell(k);
+	    	  }	    	  
+	    	  
+	      }
+	      
+	      
+	      //Create file system using specific name
+	      FileOutputStream out = new FileOutputStream(new File(path));     
+	      //write operation workbook using file out object 
+	      workbook.write(out);
+	      out.close();	
+
+	}
+	
+	
+	
+	
 	
 	
 	/**
@@ -153,9 +209,5 @@ public class CardModel {
 			}
 		}
 	}
-	
-	
-	
-	
 	
 }

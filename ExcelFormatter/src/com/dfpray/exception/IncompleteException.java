@@ -1,4 +1,4 @@
-package com.dfpray.formatter;
+package com.dfpray.exception;
 
 public class IncompleteException extends Exception {
 	/**

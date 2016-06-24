@@ -11,10 +11,9 @@ public class Main {
 		 * Add combine excel sheet
 		 * Add a save functions ("All information format?")
 		 * GUI
+		 * View: Prevent users from saving if B.C don't have required data
 		 * ...
 		*/
-
-		
 		
 	}
 	
