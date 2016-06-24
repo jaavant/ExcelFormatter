@@ -1,5 +1,5 @@
 # ExcelFormatter
-Tool created to port CardScan excel output to another format, with the ability to add/remove information. 
+Tool created to port CardScan "All Information" export to another format, with the ability to add/remove information. 
 
 ## Referenced Libraries 
 ######Apache POI
