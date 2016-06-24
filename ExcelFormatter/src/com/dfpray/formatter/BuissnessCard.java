@@ -87,7 +87,6 @@ public class BuissnessCard {
 	 * @return index of " or if there was a problem -1. *Change to exception?*
 	 */
 	private int getNextQ(int i, String string) {
-		// TODO Auto-generated method stub
 		for(int j = i + 1; j < string.length(); j++){
 			if(string.charAt(j) == '"'){
 				return j;
@@ -102,5 +101,10 @@ public class BuissnessCard {
 	
 	public void setUI(UUID id){
 		this.id = id;
+	}
+	
+	public String toString(){
+		String word = rep.toString() + company.toString() + contacts.toString() + cfInfo.toString() + misc.toString() + "\n" + info;
+		return word;
 	}
 }

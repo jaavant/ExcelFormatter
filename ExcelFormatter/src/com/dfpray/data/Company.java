@@ -98,7 +98,10 @@ public class Company {
 		this.country = country;
 	}
 	
-	
+	public String toString(){
+		return  "Company: " + companyName +  "\n StreedAdd: " + streetAdd  + "\n POBox:" + suitPOBox + "\n City: " +city  + 
+				 "\n State: " + state  + "\n Zip: " + zipcode + "\n Country: " + country + "\n Function" + companyFunction + "\n";
+	}
 	
 	
 }

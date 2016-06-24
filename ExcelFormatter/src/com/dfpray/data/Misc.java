@@ -63,5 +63,8 @@ public class Misc {
 	public void setCompanyNotes(String companyNotes) {
 		this.companyNotes = companyNotes;
 	}
-		
+	
+	public String toString(){
+		return csiCodes + "\n" + mbeaffiliations + "\n" + labor + "\n" + serviceArea + "\n" + companyNotes + "\n"; 
+	}
 }

@@ -72,4 +72,8 @@ public class CFInfo {
 		this.cf_WillNotBid = cf_WillNotBid;
 	}
 	
+	public String toString(){
+		return cf_AltEmail + "\n" + cf_DNU + "\n" + cf_SupplierManf + "\n" + cf_Trade + "\n" + "cf_UnionValue" + "\n" + cf_UnlicensedStates + "\n"
+				+ cf_WillNotBid + "\n";
+	}
 }

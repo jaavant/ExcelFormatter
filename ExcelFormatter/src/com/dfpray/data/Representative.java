@@ -53,5 +53,7 @@ public class Representative {
 		this.mobilePhone = mobilePhone;
 	}
 	
-	
+	public String toString(){
+		return "Name: " + contactFirstName + "\n Last: " + contactLastName + "\n Title: " + title + "\n Mobile: " + mobilePhone + "\n";
+	}
 }

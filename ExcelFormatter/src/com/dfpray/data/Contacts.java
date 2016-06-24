@@ -73,4 +73,8 @@ public class Contacts {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+	
+	public String toString(){
+		return phoneNum + "\n" + ext +  "\n" + faxNumber + "\n" + website + "\n" + contactLists + "\n" + emailAddress + "\n";
+	}
 }
