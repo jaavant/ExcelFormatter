@@ -29,6 +29,25 @@ public class BuissnessCard {
 	}
 
 	/**
+	 * Updates cards info dataS
+	 * @param c Contacts data
+	 * @param r Representative data
+	 * @param com Company data 
+	 * @param cf CFInfo data
+	 * @param m Misc data
+	 * @param info Info about company
+	 */
+	public void updateCard(Contacts c, Representative r, Company com, CFInfo cf, Misc m, String info){
+		contacts = c;
+		rep = r;
+		company = com;
+		cfInfo = cf;
+		misc = m;
+		this.info = info;
+	}
+	
+	
+	/**
 	 * Constructs Contracts, Representatives, Company, CFInfo, Misc, and info and parses data for them
 	 */
 	private void processData() {
