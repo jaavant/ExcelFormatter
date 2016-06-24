@@ -1,26 +1,21 @@
 package com.dfpray.formatter;
 
+import java.util.UUID;
+
 public class BuissnessCard {
+	
 	//String to be parsed
 	private String data;
+    private Contacts contacts;
+    private Representative representative;
+    private Company company;
+    private CFInfo cfInfo;
+    private Misc misc;
+    private String info;
+    private UUID id;
 	
 	//Cannot be empty, throw incomplete card exception
-	private String companyName, faxNumber, emailAddress, csiCodes, companyFunction;
-	
-	//Extra info
-	private String contactFirstName, contactLastName, title, streetAdd, suitPOBox,
-			city, state, zipcode, county, phoneNum, ext, mobilePhone, website,
-			mbeaffiliations, labor, serviceArea, companyNotes, contactLists, 
-			cf_AltEmail, cf_DNU, cf_SupllierManf, cf_Trade, cf_UnionValue,
-			cf_UnlicensedStates, cf_WillNotBid;
-	
-	//Array of all BC (Business Cards) info 
-	private String[] bc = {companyName, contactFirstName, contactLastName, title, streetAdd, suitPOBox, 
-			                city, state, zipcode, county, phoneNum, ext, mobilePhone, faxNumber, emailAddress,
-			                website, csiCodes, companyFunction,	mbeaffiliations, labor, serviceArea, companyNotes, 
-			                contactLists, cf_AltEmail, cf_DNU, cf_SupllierManf, cf_Trade, cf_UnionValue,
-							cf_UnlicensedStates, cf_WillNotBid};
-			 				
+	// private String companyName, faxNumber , emailAddress, csiCodes, companyFunction;		             
 	
 	
 	/**
@@ -36,11 +31,42 @@ public class BuissnessCard {
 	 * Parses data to get the values for the rest of the empty fields in the object
 	 */
 	private void processData() {
+		int valuesEval = 0;
+		int pos;
 		
+		// format starts with "", so we skip for convention 
+		for(int i = 4; i < data.length(); i++) {
+			pos = getNextQ(i,data);
+			
+			//check if we need to record the data
+			switch(pos){
+				
+			 case -1: break;
+			}
+		}
+	}
+
+	
+	/** 
+	 * Finds the next " in the string from the starting index. ( Not including current index) 
+	 * @param i Current index in word
+	 * @param string String to transverse through
+	 * @return index of " or if there was a problem -1. *Change to exception?*
+	 */
+	private int getNextQ(int i, String string) {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+	
+	public void setInfo(int i, String info){
 		
 	}
 	
+	public UUID getUI(){
+		return id;
+	}
 	
-	
-	
+	public void setUI(UUID id){
+		this.id = id;
+	}
 }
