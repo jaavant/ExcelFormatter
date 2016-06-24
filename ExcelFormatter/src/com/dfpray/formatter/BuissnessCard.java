@@ -25,6 +25,7 @@ public class BuissnessCard {
 	public BuissnessCard(String info) {
 		data = info;
 		processData();
+		id = UUID.randomUUID();
 	}
 
 	/**
