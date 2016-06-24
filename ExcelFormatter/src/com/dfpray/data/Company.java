@@ -1,4 +1,4 @@
-package com.dfpray.formatter;
+package com.dfpray.data;
 
 public class Company {
 	private String companyName;

@@ -2,6 +2,12 @@ package com.dfpray.formatter;
 
 import java.util.UUID;
 
+import com.dfpray.data.CFInfo;
+import com.dfpray.data.Company;
+import com.dfpray.data.Contacts;
+import com.dfpray.data.Misc;
+import com.dfpray.data.Representative;
+
 public class BuissnessCard {
 	
 	//String to be parsed
