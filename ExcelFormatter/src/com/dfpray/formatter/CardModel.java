@@ -3,11 +3,13 @@ package com.dfpray.formatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Cards {
+import com.dfpray.data.BuissnessCard;
+
+public class CardModel {
 	// TODO Implement a way when finalizing cards that all cards have mandatory info
 	private ArrayList<BuissnessCard> cards = new ArrayList<BuissnessCard>();
 	
-	public Cards(ArrayList<BuissnessCard> cards) throws IncompleteException{
+	public CardModel(ArrayList<BuissnessCard> cards) throws IncompleteException{
 		this.cards = cards;
 		checkCollision();
 

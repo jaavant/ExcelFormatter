@@ -1,12 +1,6 @@
-package com.dfpray.formatter;
+package com.dfpray.data;
 
 import java.util.UUID;
-
-import com.dfpray.data.CFInfo;
-import com.dfpray.data.Company;
-import com.dfpray.data.Contacts;
-import com.dfpray.data.Misc;
-import com.dfpray.data.Representative;
 
 public class BuissnessCard {
 	
@@ -104,7 +98,7 @@ public class BuissnessCard {
 	}
 	
 	public String toString(){
-		String word = rep.toString() + company.toString() + contacts.toString() + cfInfo.toString() + misc.toString() + "\n" + info;
+		String word = rep.toString() + company.toString() + contacts.toString() + cfInfo.toString() + misc.toString() + "\n" + "Info: " + info;
 		return word;
 	}
 }

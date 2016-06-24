@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.dfpray.data.BuissnessCard;
+
 
 
 public class Main {
@@ -44,7 +46,9 @@ public class Main {
 		try(BufferedReader br = new BufferedReader(new FileReader(address))){
 			//Check if no more lines with null
 			while((line = br.readLine()) != null){
-				
+				if(line.trim().isEmpty()){
+					continue;
+				}
 				//Skip first line
 				if(!first){
 					first = true;
