@@ -14,6 +14,13 @@ public class Representative {
 		this.mobilePhone = mobilePhone;
 	}
 
+	public Representative() {
+		contactFirstName = " ";
+		contactLastName = " ";
+		title = " ";
+		mobilePhone = " ";
+	}
+
 	public String getContactFirstName() {
 		return contactFirstName;
 	}

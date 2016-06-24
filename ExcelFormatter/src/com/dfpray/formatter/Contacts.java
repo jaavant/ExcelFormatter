@@ -17,6 +17,15 @@ public class Contacts {
 		faxNumber = fax;
 	}
 
+	public Contacts() {
+		phoneNum = " ";
+		ext = " ";
+		faxNumber = " ";
+		website = " ";
+		contactLists = " ";
+		emailAddress = " ";
+	}
+
 	public String getPhoneNum() {
 		return phoneNum;
 	}

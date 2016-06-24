@@ -2,7 +2,7 @@ package com.dfpray.formatter;
 
 public class Company {
 	private String companyName;
-	private String streedAdd;
+	private String streetAdd;
 	private String suitPOBox;
 	private String city;
 	private String state;
@@ -10,17 +10,28 @@ public class Company {
 	private String country;
 	private String companyFunction;	
 	
-	public Company(String companyName, String streedAdd, String suitPOBox, String city, String state, String zipcode,
+	public Company(String companyName, String streetAdd, String suitPOBox, String city, String state, String zipcode,
 			String country, String companyFunction) {
 		super();
 		this.companyName = companyName;
-		this.streedAdd = streedAdd;
+		this.streetAdd = streetAdd;
 		this.suitPOBox = suitPOBox;
 		this.city = city;
 		this.state = state;
 		this.zipcode = zipcode;
 		this.country = country;
 		this.companyFunction = companyFunction;
+	}
+
+	public Company() {
+		companyName = " ";
+		streetAdd = " ";
+		suitPOBox = " ";
+		city = " ";
+		state = " ";
+		zipcode = " ";
+		country = " ";
+		companyFunction = " ";
 	}
 
 	public String getCompanyFunction() {
@@ -39,12 +50,12 @@ public class Company {
 		this.companyName = companyName;
 	}
 
-	public String getStreedAdd() {
-		return streedAdd;
+	public String getStreetAdd() {
+		return streetAdd;
 	}
 
-	public void setStreedAdd(String streedAdd) {
-		this.streedAdd = streedAdd;
+	public void setStreetAdd(String streetAdd) {
+		this.streetAdd = streetAdd;
 	}
 
 	public String getSuitPOBox() {

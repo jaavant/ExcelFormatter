@@ -16,6 +16,14 @@ public class Misc {
 		this.companyNotes = companyNotes;
 	}
 
+	public Misc() {
+		csiCodes = " ";
+		mbeaffiliations = " ";
+		labor = " ";
+		serviceArea = " ";
+		companyNotes = " ";
+	}
+
 	public String getCsiCodes() {
 		return csiCodes;
 	}
