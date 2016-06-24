@@ -94,8 +94,8 @@ public class Company {
 		return country;
 	}
 
-	public void setCounty(String county) {
-		this.country = county;
+	public void setCountry(String country) {
+		this.country = country;
 	}
 	
 	

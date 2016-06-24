@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Cards {
-	
+	// TODO Implement a way when finalizing cards that all cards have mandatory info
 	private ArrayList<BuissnessCard> cards = new ArrayList<BuissnessCard>();
 	
 	public Cards(ArrayList<BuissnessCard> cards) throws IncompleteException{
