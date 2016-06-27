@@ -88,13 +88,15 @@ public class BusinessCard {
 				case 6:	 company.setCompanyName(phrase); break;		//Company
 				case 7:	 company.setStreetAdd(phrase);	break;		//Address
 				case 10: company.setCity(phrase);	break;		    //city, state
-				case 11: company.setZipcode(phrase); break;			//zip code
-				case 12: company.setCountry(phrase);   break;		//country
-				case 20: contacts.setPhoneNum(phrase); break;		//phone
-				case 21: contacts.setFaxNumber(phrase); break;  	//fax
-				case 34: contacts.setEmailAddress(phrase); break;	//email
-				case 35: contacts.setWebsite(phrase); break;		//webpage
-				case 49: this.info = phrase;           break;		//other		
+				case 11: company.setState(phrase); break;
+				case 12: company.setZipcode(phrase); break;			//zip code
+				case 13: company.setCountry(phrase);   break;		//country
+				case 21: contacts.setPhoneNum(phrase); break;		//phone
+				case 22: contacts.setFaxNumber(phrase); break;  	//fax
+				case 23: rep.setMobilePhone(phrase); break;         //Mobile 
+				case 35: contacts.setEmailAddress(phrase); break;	//email
+				case 36: contacts.setWebsite(phrase); break;		//webpage
+				case 50: this.info = phrase;           break;		//other		
 			}
 			count++;			
 			oldPos = pos + 2;
@@ -167,7 +169,7 @@ public class BusinessCard {
 		bData[18] = misc.getMbeaffiliations();
 		bData[19] = misc.getLabor();
 		bData[20] =	misc.getServiceArea();														
-		bData[21] = misc.getCompanyNotes();
+		bData[21] = info; //should i use info for company notes?
 		bData[22] = contacts.getContactLists();
 		bData[23] = cfInfo.getCf_AltEmail();
 		bData[24] = cfInfo.getCf_DNU();
