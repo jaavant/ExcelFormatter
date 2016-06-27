@@ -45,20 +45,13 @@ public class CardModel {
 	private ArrayList<BusinessCard> parseRAWCards(String address) throws IOException{	
 		ArrayList<BusinessCard> bCards = new ArrayList<BusinessCard>();
 		String line;
-		boolean first = false;
-		
+
 		try(BufferedReader br = new BufferedReader(new FileReader(address))){
 			//Check if no more lines with null
 			while((line = br.readLine()) != null){
 				if(line.trim().isEmpty()){
 					continue;
 				}
-				//Skip first line
-				if(!first){
-					first = true;
-					continue;
-				}
-				
 				bCards.add(new BusinessCard(line));
 				
 				
