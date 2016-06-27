@@ -103,7 +103,7 @@ public class BusinessCard {
 	/**
 	 * Takes an array of Info and assigns the info 
 	 * to the respectful data
-	 * @param bData Array of Strings of info of a B.CS
+	 * @param bData Array of Strings of info of a B.C
 	 */
 	private void arrayToInfo(String[] bData){
 		company.setCompanyName(bData[0]);

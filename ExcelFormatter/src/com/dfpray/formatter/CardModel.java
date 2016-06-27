@@ -27,7 +27,7 @@ public class CardModel {
 	 * Create a list of BusinessCards from a path to a file
 	 * @param path Path to file
 	 */
-	public CardModel(String path){
+	public CardModel(){
 		cards = new ArrayList<BusinessCard>();
 	}
 	
@@ -156,38 +156,45 @@ public class CardModel {
 	 * @throws IOException 
 	 */
 	public void exportToExcel(String path) throws IOException{
-		//TODO finish method 
 		BusinessCard card; 
-		Row row;
 		Cell cell;
 		String[] info;
-		
+		Double number;
+		String cardInfo;
+		Row row;
+			
 		//Create Blank workbook/sheet
-	      XSSFWorkbook workbook = new XSSFWorkbook();      
-	      XSSFSheet sheet = workbook.createSheet("Business Data");
+	    @SuppressWarnings("resource")
+		XSSFWorkbook workbook = new XSSFWorkbook();      
+	    XSSFSheet sheet = workbook.createSheet("Business Data");
 	      
-	      //Row = Business
-	      for(int i = 0; i < amtCards(); i++){
-	    	  row = sheet.createRow(i);
-	    	  card = cards.get(i);
-	    	  info = card.infoToArray();
+	    //Row = Business
+	    for(int i = 0; i < amtCards(); i++){
+	    	row = sheet.createRow(i);
+	    	card = cards.get(i);
+	    	info = card.infoToArray();
 	    	  
-	    	  //Create Column = Data for each Business
-	    	  for(int k = 0; k < 30; k++){
-	    		  cell = row.createCell(k);
-	    	  }	    	  
-	    	  
-	      }
-	      
-	      
-	      //Create file system using specific name
-	      FileOutputStream out = new FileOutputStream(new File(path));     
-	      //write operation workbook using file out object 
-	      workbook.write(out);
-	      out.close();	
+	        //Create Column = Data for each Business
+	    	for(int k = 0; k < 30; k++){
+	    		cardInfo = info[k];
+	    		cell = row.createCell(k);
+	    		
+	    		try{
+	    			number = Double.parseDouble(cardInfo);
+	    			cell.setCellValue(number);
+	    		}catch (NumberFormatException e){
+	    			cell.setCellValue(cardInfo);
+	    		}
+	    		
+	    	}	    	  	    	  
+	    }
+	      	      
+	    //Create file system using specific name
+	    FileOutputStream out = new FileOutputStream(new File(path));      
+	    workbook.write(out);
+	    out.close();	
 
 	}
-	
 	
 	
 	
