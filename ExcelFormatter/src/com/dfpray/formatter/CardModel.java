@@ -2,10 +2,12 @@ package com.dfpray.formatter;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -147,6 +149,57 @@ public class CardModel {
 		if(!f.isFile()) throw new IncompleteException("This is not a file");
 		
 		return f.exists();
+	}
+	
+	/**
+	 * Imports a .xlsx file and create a CardModel form it
+	 * @param path Path to file
+	 * @throws IOException
+	 */
+	public void importFromExcel(String path) throws IOException{
+		  String[] cardInfo = new String[32];
+		  FileInputStream file = new FileInputStream(new File(path));
+          @SuppressWarnings("resource")
+		  XSSFWorkbook workbook = new XSSFWorkbook(file);
+          XSSFSheet sheet = workbook.getSheetAt(0);
+          Row row;
+          Cell cell;
+          Iterator<Cell> cellIterator;
+          Iterator<Row> rowIterator;
+          int i;
+          
+          //Iterate through each rows one by one
+          rowIterator = sheet.iterator();
+         
+          while (rowIterator.hasNext()){      	  
+              row = rowIterator.next();
+              cellIterator = row.cellIterator();
+              
+              i = 0;
+              while (cellIterator.hasNext()){          	  
+                  cell = cellIterator.next();
+                  i = 0;
+                  switch (cell.getCellType()){
+                  		
+                  		case Cell.CELL_TYPE_BLANK:
+                  			cardInfo[i] = " ";
+                  			break;
+                
+                  		case Cell.CELL_TYPE_NUMERIC:
+                  			cardInfo[i] = (Double.toString(cell.getNumericCellValue()));
+                  			break;
+                          
+                  		case Cell.CELL_TYPE_STRING:
+                  			cardInfo[i] = cell.getStringCellValue();
+                  			break;
+                  			
+                  }
+                  i++;
+              }
+              //Create card and add it tho this 
+              cards.add(new BusinessCard(cardInfo));
+          }
+          file.close();
 	}
 	
 	

@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="C:/poi-3.15/poi-ooxml-schemas-3.15-beta1.jar"/>
 	<classpathentry kind="lib" path="C:/poi-3.15/poi-3.15-beta1.jar"/>
 	<classpathentry kind="lib" path="C:/poi-3.15/ooxml-lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

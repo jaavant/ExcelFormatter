@@ -139,7 +139,7 @@ public class BusinessCard {
 		cfInfo.setCf_UnlicensedStates(bData[28]);
 		cfInfo.setCf_WillNotBid(bData[29]);
 		info = bData[30];
-		data = bData[30];
+		data = bData[31];
 	}
 	
 	/**
@@ -191,8 +191,10 @@ public class BusinessCard {
 		this.id = id;
 	}
 	
+	@Override
 	public String toString(){
-		String word = rep.toString() + company.toString() + contacts.toString() + cfInfo.toString() + misc.toString() + "\n" + "Info: " + info;
+		String word = company.getCompanyName();
+		//String word = rep.toString() + company.toString() + contacts.toString() + cfInfo.toString() + misc.toString() + "\n" + "Info: " + info;
 		return word;
 	}
 	
