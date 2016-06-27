@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -20,6 +21,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -58,7 +60,7 @@ public class Main extends Application {
 		VBox root = new VBox();
 		
 		//Scene
-		Scene scene = new Scene(root, 1300, 900);    
+		Scene scene = new Scene(root, 1300, 900);
 		
 		//Menu////////////////////////////////////////
         MenuBar menuBar = new MenuBar();
@@ -95,7 +97,8 @@ public class Main extends Application {
  	
 		//SplitPlane///////////////////////////////////
 		SplitPane splitPane = new SplitPane();
-		splitPane.setPrefSize(1300,900);		
+		splitPane.setPrefSize(1300,900);	
+		splitPane.setPadding(new Insets(10,10,10,10));
 	
 			//Left Pane (List)
 			AnchorPane leftPane = new AnchorPane();
@@ -103,12 +106,17 @@ public class Main extends Application {
 			leftPane.setMaxWidth(200);
 			leftPane.setMinWidth(175);
 			
+
+		    TextField searchTF = new TextField ();
+		    searchTF.setText("Search");
+		   
 			ListView<BusinessCard> listView = new ListView<BusinessCard>();
 			ObservableList<BusinessCard> observableList = FXCollections.observableList((List<BusinessCard>) myList);
 			                                                  //listView.setStyle("-fx-background-color: red");
 			listView.setItems(observableList);
-			listView.setMinHeight(895);
+			listView.setMinHeight(600);
 			leftPane.getChildren().add(listView);
+			leftPane.getChildren().add(searchTF);
 			
 			
 			
@@ -116,7 +124,10 @@ public class Main extends Application {
 			//Right Pane  
 			AnchorPane rightPane = new AnchorPane();
 			rightPane.setStyle("-fx-background-color: white");
-			//leftPane.setMinSize(425,325);
+			
+				//Labels
+					//Buissness data
+						
 			
 		splitPane.getItems().addAll(leftPane, rightPane);           //splitPane.setStyle("-fx-background-color: blue");
 		root.getChildren().add(splitPane);	
