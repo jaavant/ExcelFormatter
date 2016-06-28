@@ -49,7 +49,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		ArrayList<BusinessCard> myList = new ArrayList<BusinessCard>();
-			
+		Label busLabel;
+		TextArea comNotesTA;
+		
+	
 		// File Chooser
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
@@ -143,14 +146,14 @@ public class Main extends Application {
 			rightPane.setMinSize(1025, 1500);
 
 		
-				Label busLabel = new Label("Company Name");
+				busLabel = new Label("Company Name");
 				busLabel.setStyle("-fx-font: 45 Verdana;");
 				
 				TitledPane comNotesTP;
-					TextArea comNotesTA = new TextArea();
+					comNotesTA = new TextArea();
 					comNotesTA.setWrapText(true);
 					comNotesTA.setStyle("-fx-font:15 Verdana");
-					comNotesTA.setPadding(new Insets(5,5,5,5));
+					comNotesTA.setPadding(new Insets(5,10,5,10));
 					
 								
 				comNotesTP = new TitledPane("Company Notes",comNotesTA);
@@ -380,7 +383,42 @@ public class Main extends Application {
 				cfTP.setMaxWidth(750);	
 			
 			
-			rightPane.getChildren().addAll(busLabel,comNotesTP,mandTP,comTP,conTP,repTP,cfTP);
+			TitledPane otherTP = new TitledPane();
+				GridPane otherGP = new GridPane();
+					otherGP.setHgap(13);
+					otherGP.setVgap(10);
+				
+					Label lbMbe = new Label("MBE Affiliations:");
+					lbMbe.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbMbe, HPos.RIGHT);
+					TextField tfMbe = new TextField();
+					
+					Label lbLabor = new Label("Labor:");
+					lbLabor.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbLabor, HPos.RIGHT);
+					TextField tfLabor = new TextField();
+
+					Label lbServiceA = new Label("Service Area:");
+					lbMbe.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbMbe, HPos.RIGHT);
+					TextField tfServiceA = new TextField();
+					
+					otherGP.add(lbMbe, 0, 0);		otherGP.add(tfMbe, 1, 0);
+					otherGP.add(lbLabor,0,1); 		otherGP.add(tfLabor, 1, 1);
+					otherGP.add(lbServiceA, 3, 0);	otherGP.add(tfServiceA, 4, 0);
+					
+					
+					otherGP.setPadding(new Insets(10,10,10,10));
+				
+				otherTP.setText("Other");
+				otherTP.setContent(otherGP);
+				otherTP.setCollapsible(false);
+				otherTP.setMaxWidth(750);	
+					
+					
+					
+					
+			rightPane.getChildren().addAll(busLabel,comNotesTP,mandTP,comTP,conTP,repTP,cfTP,otherTP);
 
 			scrollPane = new ScrollPane(rightPane);
 			scrollPane.setStyle("-fx-font-size: 15px;"); 
