@@ -68,7 +68,7 @@ public class Main extends Application {
 		
 		//Menu////////////////////////////////////////
         MenuBar menuBar = new MenuBar();
-        menuBar.setMinHeight(30);
+        menuBar.setStyle("-fx-font:15 Verdana");
         	Menu fileFile = new Menu("File");
         		MenuItem saveMI = new MenuItem("Save");
         		MenuItem openMI = new MenuItem("Open");
@@ -97,20 +97,22 @@ public class Main extends Application {
         		
         	Menu helpFile = new Menu("Help"); 
         menuBar.getMenus().addAll(fileFile, helpFile);
-        root.getChildren().add(menuBar);
- 	
+        root.getChildren().add(menuBar);        
+        
+        
 		//SplitPlane///////////////////////////////////
 		SplitPane splitPane = new SplitPane();
 		splitPane.setPrefSize(1300,900);	
-		splitPane.setPadding(new Insets(10,10,10,10));
+		//splitPane.setPadding(new Insets(10,10,10,10));
 	
 			//Left Pane (List)////////////////////////
 	
 			VBox leftPane = new VBox(5);
 			leftPane.setAlignment(Pos.CENTER);
-
-			leftPane.setMaxWidth(220);
+			leftPane.setPadding(new Insets(7,7,7,7));
+			leftPane.setMaxWidth(250); //20
 			leftPane.setMinWidth(190);
+			leftPane.setPrefWidth(220);
 			
 				
 		    	TextField searchTF = new TextField();
@@ -125,26 +127,38 @@ public class Main extends Application {
 				listView.setMaxWidth(190);
 		    	
 		    	Button addAccBtn = new Button(" New Contact  ");
-		    	addAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #b6e7c9;");
+		    	addAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #e6f3ff;");   // #b6e7c9;");
 		    	
 		    	Button delAccBtn = new Button("Delete Contact");
-		    	delAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #F74D60");
+		    	delAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #e6f3ff;"); //#F74D60");
 
 			leftPane.getChildren().addAll(searchTF,listView,addAccBtn,delAccBtn);
 			/////////////////////////////////////////////////////////////////////
 
-			
-			
-			
+		
 			
 			//Right Pane/////////////////////////////////////
+			
 			ScrollPane scrollPane;
 			VBox rightPane = new VBox();
-		    rightPane.setPadding(new Insets(75,5,5,5));
-			rightPane.setStyle("-fx-background-color: white");
+		    rightPane.setPadding(new Insets(75,2,2,2));
+														//rightPane.setStyle("-fx-background-color: white");
 			rightPane.setAlignment(Pos.TOP_CENTER);
-			rightPane.setMinSize(1025, 1500);
-
+																//rightPane.setMinSize(1025, 1500);
+			
+				//Top Pane///////////////
+				VBox buttonPane = new VBox(5);
+				Button editBtn = new Button("Edit");
+				editBtn.setStyle("-fx-base: #e6f3ff");
+		
+				buttonPane.setMaxWidth(760);
+				buttonPane.setAlignment(Pos.BASELINE_RIGHT);
+																//buttonPane.setStyle("-fx-background-color: blue");
+				buttonPane.getChildren().addAll(editBtn);
+							
+				////////////////////////		
+			
+			
 		
 				busLabel = new Label("Company Name");
 				busLabel.setStyle("-fx-font: 45 Verdana;");
@@ -157,6 +171,7 @@ public class Main extends Application {
 					
 								
 				comNotesTP = new TitledPane("Company Notes",comNotesTA);
+				comNotesTP.setDisable(true);
 				comNotesTP.setMaxWidth(750);
 				comNotesTP.setMaxHeight(200);
 				comNotesTP.setCollapsible(false);
@@ -205,6 +220,7 @@ public class Main extends Application {
 			comTP.setText("Company");
 			comTP.setContent(comGP);
 			comTP.setCollapsible(false);
+			comTP.setDisable(true);
 			comTP.setMaxWidth(750);
 				
 				
@@ -249,6 +265,7 @@ public class Main extends Application {
 							
 				mandTP.setText("Mandatory");
 				mandTP.setContent(mandGP);
+				mandTP.setDisable(true);
 				mandTP.setCollapsible(false);
 				mandTP.setMaxWidth(750);
 					
@@ -289,6 +306,7 @@ public class Main extends Application {
 							
 					conTP.setText("Contact");
 					conTP.setContent(conGP);
+					conTP.setDisable(true);
 					conTP.setCollapsible(false);
 					conTP.setMaxWidth(750);
 						
@@ -327,6 +345,7 @@ public class Main extends Application {
 							
 				repTP.setText("Representative");
 				repTP.setContent(repGP);
+				repTP.setDisable(true);
 				repTP.setCollapsible(false);
 				repTP.setMaxWidth(750);
 		
@@ -379,6 +398,7 @@ public class Main extends Application {
 					
 				cfTP.setText("CF Info");
 				cfTP.setContent(cfGP);
+				cfTP.setDisable(true);
 				cfTP.setCollapsible(false);
 				cfTP.setMaxWidth(750);	
 			
@@ -412,13 +432,14 @@ public class Main extends Application {
 				
 				otherTP.setText("Other");
 				otherTP.setContent(otherGP);
+				otherTP.setDisable(true);
 				otherTP.setCollapsible(false);
 				otherTP.setMaxWidth(750);	
 					
 					
 					
 					
-			rightPane.getChildren().addAll(busLabel,comNotesTP,mandTP,comTP,conTP,repTP,cfTP,otherTP);
+			rightPane.getChildren().addAll(buttonPane,busLabel,comNotesTP,mandTP,comTP,conTP,repTP,cfTP,otherTP);
 
 			scrollPane = new ScrollPane(rightPane);
 			scrollPane.setStyle("-fx-font-size: 15px;"); 
