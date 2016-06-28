@@ -1,10 +1,12 @@
 package com.dfpray.formatter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dfpray.data.BusinessCard;
+import com.dfpray.exception.IncompleteException;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -15,6 +17,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,6 +34,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -48,6 +53,10 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		CardModel cardModel = new CardModel();
+		
+		ObservableList<BusinessCard> observableList;
+		
 		ArrayList<BusinessCard> myList = new ArrayList<BusinessCard>();
 		Label busLabel;
 		TextArea comNotesTA;
@@ -56,9 +65,9 @@ public class Main extends Application {
 		// File Chooser
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TEXT files (*.txt)", "*.txt"));
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Microsoft Excel Worksheet (.xlsx)", "*.xlsx"));
-		
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TEXT files (*.txt)","*.txt"), 
+				new ExtensionFilter("Microsoft Excel Worksheet (.xlsx)", "*.xlsx"));
+	
 		
 		//Root Pane
 		VBox root = new VBox();
@@ -86,9 +95,17 @@ public class Main extends Application {
         		openMI.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent e) {
 						File file = fileChooser.showOpenDialog(stage);
+						Alert alert = new Alert(AlertType.WARNING);
+						alert.setTitle("Error");
+						
 	                    if (file != null) {
 	                       //TODO  openFile(file);
+	                    	
 	                    }
+	                  //  else{
+	                   // 	alert.setHeaderText("Error");
+	                  //  	alert.setContentText("Unknown Error");
+	                  //  }
 					}      			
         		});    		
         		
@@ -121,7 +138,7 @@ public class Main extends Application {
 		    	searchTF.setMaxWidth(190);
 		   
 		    	ListView<BusinessCard> listView = new ListView<BusinessCard>();
-		    	ObservableList<BusinessCard> observableList = FXCollections.observableList((List<BusinessCard>) myList);
+		    	observableList = FXCollections.observableList((List<BusinessCard>) myList);
 		    	listView.setItems(observableList);
 				listView.setMinHeight(700); 
 				listView.setMaxWidth(190);
