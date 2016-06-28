@@ -47,13 +47,39 @@ public class Main extends Application {
 	File openedfile;
 	
 	TextField tfStreet;
+	TextField tfSuitePO;
+	TextField tfCity;
+	TextField tfState;
+	TextField tfCountry;
+	TextField tfComName;
+	TextField tfFaxNum;
+	TextField tfEmail;
+	TextField tfcsiCode;
+	TextField tfComFunc;
+	TextField tfphNum;
+	TextField tfExt;
+	TextField tfWebsite;
+	TextArea tfContactL;
+	TextField tfFName;
+	TextField tfLName;
+	TextField tfTitle;
+	TextField tfMobile;
+	TextField tfAEmail;
+	TextField tfSupplier;
+	TextField tfTrade;
+	TextField tfUnion;
+	TextField tfUnlic;
+	TextField tfWNB;
+	TextField tfMbe;
+	TextField tfLabor;	
+	TextField tfServiceA;
+
+
 	
 	public static void main(String args[]){
 		/* TODO 
-		 * Controller
 		 * Add combine excel sheet
 		 * Add a save functions ("All information format?")
-		 * GUI
 		 * View: Prevent users from saving if B.C don't have required data
 		 * ...
 		*/
@@ -92,44 +118,46 @@ public class Main extends Application {
         		    }
         		});
         		
-        		openMI.setOnAction(new EventHandler<ActionEvent>(){
-					public void handle(ActionEvent e) {
-						File file = fileChooser.showOpenDialog(stage);					
-						Alert alert = new Alert(AlertType.WARNING);
-						alert.setTitle("Error");
-						
-	                    if (file != null) {
-	                    	try {
-								cardModel.addCards(file.getAbsolutePath());
-							} catch (IncompleteException e1) {
-								alert.setHeaderText("File Does Not Exist");
-								alert.setContentText("Oops there was an Error");
-							} catch (IOException e1) {
-								alert.setHeaderText("IOException");
-								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-
-								alert.showAndWait();
-							}
-	                 	                    	                    	
-	        		    	observableList = FXCollections.observableList(cardModel.getCards());
-	        		    	listView.setItems(observableList);
-	        		    	
-	                    }
-					}      			
-        		});    		
+//        		
+//        		//Open file and fill viewlist 
+//        		openMI.setOnAction(new EventHandler<ActionEvent>(){
+//					public void handle(ActionEvent e) {
+//						File file = fileChooser.showOpenDialog(stage);					
+//						Alert alert = new Alert(AlertType.WARNING);
+//						alert.setTitle("Error");
+//						
+//	                    if (file != null) {
+//	                    	try {
+//								cardModel.addCards(file.getAbsolutePath());
+//							} catch (IncompleteException e1) {
+//								alert.setHeaderText("File Does Not Exist");
+//								alert.setContentText("Oops there was an Error");
+//							} catch (IOException e1) {
+//								alert.setHeaderText("IOException");
+//								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+//
+//								alert.showAndWait();
+//							}
+//	                 	                    	                    	
+//	        		    	observableList = FXCollections.observableList(cardModel.getCards());
+//	        		    	listView.setItems(observableList);
+//	        		    	
+//	                    }
+//					}      			
+//        		});    		
         		
         		//List view listener, changes the data fields according to the selected company
-//        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
-//        			@Override
-//        			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
-//        				try {
-//							setDataFields(cardModel.getCard(newValue.getUI()));
-//						} catch (IncompleteException e) {
-//							e.printStackTrace();
-//						}
-//        			}
-//        		});
-//        		
+        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
+        			@Override
+        			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
+        				try {
+							setDataFields(cardModel.getCard(newValue.getUI()));
+						} catch (IncompleteException e) {
+							e.printStackTrace();					
+						}
+        			}
+      		});
+       		
         		
         		
         	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, exportMI,exitMI);
@@ -230,22 +258,22 @@ public class Main extends Application {
 					Label lbSuitePO = new Label("Suite/P.O. Box:");
 					lbSuitePO.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbSuitePO, HPos.RIGHT);
-					TextField tfSuitePO = new TextField();
+					tfSuitePO = new TextField();
 						
 					Label lbCity = new Label("City:");
 					lbCity.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbCity, HPos.RIGHT);
-					TextField tfCity = new TextField();
+					tfCity = new TextField();
 						
 					Label lbState = new Label("State:");
 					lbState.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbState, HPos.RIGHT);
-					TextField tfState = new TextField();
+					tfState = new TextField();
 						
 					Label lbCountry = new Label("Country:");
 					lbCountry.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbCountry, HPos.RIGHT);
-					TextField tfCountry = new TextField();
+					tfCountry = new TextField();
 			
 					comGP.add(lbStreet, 0,0);  comGP.add(tfStreet, 1, 0);
 					comGP.add(lbSuitePO, 0, 1);  comGP.add(tfSuitePO, 1, 1);
@@ -268,30 +296,31 @@ public class Main extends Application {
 					GridPane mandGP = new GridPane();
 						mandGP.setHgap(13);
 						mandGP.setVgap(10);
+						
 						Label lbComName = new Label("Company Name:");
 						lbComName.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbComName, HPos.RIGHT);
-						TextField tfComName = new TextField();
+						tfComName = new TextField();
 							
 						Label lbFaxNum = new Label("Fax Number:");
 						lbFaxNum.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbFaxNum, HPos.RIGHT);
-						TextField tfFaxNum = new TextField();
+						tfFaxNum = new TextField();
 							
 						Label lbEmail = new Label("Email Address:");
 						lbEmail.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbEmail, HPos.RIGHT);
-						TextField tfEmail = new TextField();
+						tfEmail = new TextField();
 							
 						Label lbcsiCode = new Label("CSI Code:");
 						lbcsiCode.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbcsiCode, HPos.RIGHT);
-						TextField tfcsiCode = new TextField();
+						tfcsiCode = new TextField();
 							
 						Label lbComFunc = new Label("Company Function:");
 						lbComFunc.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbComFunc, HPos.RIGHT);
-						TextField tfComFunc = new TextField();
+						tfComFunc = new TextField();
 				
 						mandGP.add(lbComName, 0,0);  mandGP.add(tfComName, 1, 0);
 						mandGP.add(lbFaxNum, 0, 1);  mandGP.add(tfFaxNum, 1, 1);
@@ -317,22 +346,22 @@ public class Main extends Application {
 						Label lbphNum = new Label("Phone Number:");
 						lbphNum.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbphNum, HPos.RIGHT);
-						TextField tfphNum = new TextField();
+						tfphNum = new TextField();
 							
 						Label lbExt = new Label("Ext:");
 						lbExt.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbExt, HPos.RIGHT);
-						TextField tfExt = new TextField();
+						tfExt = new TextField();
 							
 						Label lbWebsite = new Label("Website:");
 						lbWebsite.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbWebsite, HPos.RIGHT);
-						TextField tfWebsite = new TextField();
+						tfWebsite = new TextField();
 							
 						Label lbContactL = new Label("Contact List:");
 						lbContactL.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbContactL, HPos.RIGHT);
-						TextArea tfContactL= new TextArea();
+						tfContactL = new TextArea();
 						tfContactL.setMaxSize(250, 75);
 							
 						conGP.add(lbphNum, 0,0);  	 conGP.add(tfphNum, 1, 0);
@@ -359,22 +388,22 @@ public class Main extends Application {
 						Label lbFName = new Label("First Name:");
 						lbFName.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbFName, HPos.RIGHT);
-						TextField tfFName= new TextField();
+						tfFName = new TextField();
 							
 						Label lbLName = new Label("Last Name:");
 						lbLName.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbLName, HPos.RIGHT);
-						TextField tfLName = new TextField();
+						tfLName = new TextField();
 							
 						Label lbTitle = new Label("Title:");
 						lbTitle.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbTitle, HPos.RIGHT);
-						TextField tfTitle = new TextField();
+						tfTitle = new TextField();
 							
 						Label lbMobile = new Label("Mobile:");
 						lbMobile.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbMobile, HPos.RIGHT);
-						TextField tfMobile= new TextField();
+						tfMobile = new TextField();
 							
 						repGP.add(lbFName, 0,0);  	 repGP.add(tfFName, 1, 0);
 						repGP.add(lbLName, 0, 1);  	 repGP.add(tfLName, 1, 1);
@@ -397,32 +426,32 @@ public class Main extends Application {
 						Label lbAEmail = new Label("Alt Email:");
 						lbAEmail.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbAEmail, HPos.RIGHT);
-						TextField tfAEmail = new TextField();
+						tfAEmail = new TextField();
 					
 						Label lbSupplier= new Label("Supplier/Manufacturer:");
 						lbSupplier.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbSupplier, HPos.RIGHT);
-						TextField tfSupplier = new TextField();
+						tfSupplier = new TextField();
 					
 						Label lbTrade = new Label("Trade:");
 						lbTrade.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbTrade, HPos.RIGHT);
-						TextField tfTrade = new TextField();
+						tfTrade = new TextField();
 					
 						Label lbUnion = new Label("Union Value:");
 						lbUnion.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbUnion, HPos.RIGHT);
-						TextField tfUnion = new TextField();
+						tfUnion = new TextField();
 					
 						Label lbUnlic = new Label("Unlicensed States:");
 						lbUnlic.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbUnlic, HPos.RIGHT);
-						TextField tfUnlic = new TextField();
+						tfUnlic = new TextField();
 						
 						Label lbWNB = new Label("Will Not Bid:");
 						lbWNB.setStyle("-fx-font: 12 Verdana;");
 						GridPane.setHalignment(lbWNB, HPos.RIGHT);
-						TextField tfWNB= new TextField();
+						tfWNB = new TextField();
 		
 		
 					cfGP.add(lbAEmail, 0,0);    cfGP.add(tfAEmail, 1, 0);
@@ -450,17 +479,17 @@ public class Main extends Application {
 					Label lbMbe = new Label("MBE Affiliations:");
 					lbMbe.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbMbe, HPos.RIGHT);
-					TextField tfMbe = new TextField();
+					tfMbe = new TextField();
 					
 					Label lbLabor = new Label("Labor:");
 					lbLabor.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbLabor, HPos.RIGHT);
-					TextField tfLabor = new TextField();
+					tfLabor = new TextField();
 
 					Label lbServiceA = new Label("Service Area:");
 					lbMbe.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbMbe, HPos.RIGHT);
-					TextField tfServiceA = new TextField();
+					tfServiceA = new TextField();
 					
 					otherGP.add(lbMbe, 0, 0);		otherGP.add(tfMbe, 1, 0);
 					otherGP.add(lbLabor,0,1); 		otherGP.add(tfLabor, 1, 1);
