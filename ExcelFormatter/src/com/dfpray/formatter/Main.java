@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.dfpray.data.BusinessCard;
 
 import javafx.application.Application;
@@ -14,8 +12,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -27,15 +26,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public class Main extends Application {
 	
 	public static void main(String args[]){
 		/* TODO 
 		 * Controller
-		 * Add export to excel
-		 * Add read from excel
 		 * Add combine excel sheet
 		 * Add a save functions ("All information format?")
 		 * GUI
@@ -101,22 +97,36 @@ public class Main extends Application {
 		splitPane.setPadding(new Insets(10,10,10,10));
 	
 			//Left Pane (List)
-			AnchorPane leftPane = new AnchorPane();
+			VBox leftPane = new VBox(5);
+			leftPane.setAlignment(Pos.CENTER);
 
-			leftPane.setMaxWidth(200);
-			leftPane.setMinWidth(175);
+			leftPane.setMaxWidth(220);
+			leftPane.setMinWidth(190);
 			
 
-		    TextField searchTF = new TextField ();
-		    searchTF.setText("Search");
+		    	TextField searchTF = new TextField("Search");
+		    	searchTF.setStyle("-fx-prompt-text-fill: derive(-fx-control-inner-background, -30%); -fx-base: #D3D3D3;");
+		    	searchTF.setMaxWidth(190);
 		   
-			ListView<BusinessCard> listView = new ListView<BusinessCard>();
-			ObservableList<BusinessCard> observableList = FXCollections.observableList((List<BusinessCard>) myList);
-			                                                  //listView.setStyle("-fx-background-color: red");
-			listView.setItems(observableList);
-			listView.setMinHeight(600);
-			leftPane.getChildren().add(listView);
-			leftPane.getChildren().add(searchTF);
+		    	ListView<BusinessCard> listView = new ListView<BusinessCard>();
+		    	ObservableList<BusinessCard> observableList = FXCollections.observableList((List<BusinessCard>) myList);
+		    	listView.setItems(observableList);
+				listView.setMinHeight(700); 
+				listView.setMaxWidth(190);
+		    	
+		    	Button addAccBtn = new Button(" New Contact  ");
+		    	addAccBtn.setStyle("-fx-font: 19 arial; -fx-base: #b6e7c9;");
+		    	
+		    	Button delAccBtn = new Button("Delete Contact");
+		    	delAccBtn.setStyle("-fx-font: 19 arial; -fx-base: #F74D60");
+			
+			
+			
+								//listView.setStyle("-fx-background-color: red");
+		
+			leftPane.getChildren().addAll(searchTF,listView,addAccBtn,delAccBtn);
+
+
 			
 			
 			
