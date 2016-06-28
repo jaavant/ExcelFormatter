@@ -2,13 +2,12 @@ package com.dfpray.formatter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.dfpray.data.BusinessCard;
 import com.dfpray.exception.IncompleteException;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,10 +33,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	
+	FileChooser fileChooser;
+	CardModel cardModel = new CardModel();
+	ObservableList<BusinessCard> observableList;
+	ListView<BusinessCard> listView;
+	
+	Label busLabel;
+	TextArea comNotesTA;
+	File openedfile;
+	
+	TextField tfStreet;
 	
 	public static void main(String args[]){
 		/* TODO 
@@ -52,23 +61,14 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
-		CardModel cardModel = new CardModel();
-		
-		ObservableList<BusinessCard> observableList;
-		
-		ArrayList<BusinessCard> myList = new ArrayList<BusinessCard>();
-		Label busLabel;
-		TextArea comNotesTA;
-		
+	public void start(Stage stage) throws Exception {	
 	
 		// File Chooser
-		FileChooser fileChooser = new FileChooser();
+		fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TEXT files (*.txt)","*.txt"), 
-				new ExtensionFilter("Microsoft Excel Worksheet (.xlsx)", "*.xlsx"));
+		//fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TEXT files (*.txt)","*.txt"), 
+		//		new ExtensionFilter("Microsoft Excel Worksheet (.xlsx)", "*.xlsx"));
 	
-		
 		//Root Pane
 		VBox root = new VBox();
 		
@@ -94,20 +94,42 @@ public class Main extends Application {
         		
         		openMI.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent e) {
-						File file = fileChooser.showOpenDialog(stage);
+						File file = fileChooser.showOpenDialog(stage);					
 						Alert alert = new Alert(AlertType.WARNING);
 						alert.setTitle("Error");
 						
 	                    if (file != null) {
-	                       //TODO  openFile(file);
-	                    	
+	                    	try {
+								cardModel.addCards(file.getAbsolutePath());
+							} catch (IncompleteException e1) {
+								alert.setHeaderText("File Does Not Exist");
+								alert.setContentText("Oops there was an Error");
+							} catch (IOException e1) {
+								alert.setHeaderText("IOException");
+								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+
+								alert.showAndWait();
+							}
+	                 	                    	                    	
+	        		    	observableList = FXCollections.observableList(cardModel.getCards());
+	        		    	listView.setItems(observableList);
+	        		    	
 	                    }
-	                  //  else{
-	                   // 	alert.setHeaderText("Error");
-	                  //  	alert.setContentText("Unknown Error");
-	                  //  }
 					}      			
         		});    		
+        		
+        		//List view listener, changes the data fields according to the selected company
+//        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
+//        			@Override
+//        			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
+//        				try {
+//							setDataFields(cardModel.getCard(newValue.getUI()));
+//						} catch (IncompleteException e) {
+//							e.printStackTrace();
+//						}
+//        			}
+//        		});
+//        		
         		
         		
         	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, exportMI,exitMI);
@@ -137,8 +159,8 @@ public class Main extends Application {
 		    	searchTF.setStyle("-fx-font: 14 Verdana;");
 		    	searchTF.setMaxWidth(190);
 		   
-		    	ListView<BusinessCard> listView = new ListView<BusinessCard>();
-		    	observableList = FXCollections.observableList((List<BusinessCard>) myList);
+		    	listView = new ListView<BusinessCard>();
+		    	observableList = FXCollections.observableList(cardModel.getCards());
 		    	listView.setItems(observableList);
 				listView.setMinHeight(700); 
 				listView.setMaxWidth(190);
@@ -203,7 +225,7 @@ public class Main extends Application {
 					Label lbStreet = new Label("Street Address:");
 					lbStreet.setStyle("-fx-font: 12 Verdana;");
 					GridPane.setHalignment(lbStreet, HPos.RIGHT);
-					TextField tfStreet = new TextField();
+					tfStreet = new TextField();
 						
 					Label lbSuitePO = new Label("Suite/P.O. Box:");
 					lbSuitePO.setStyle("-fx-font: 12 Verdana;");
@@ -487,6 +509,18 @@ public class Main extends Application {
 		stage.setScene(scene);
 		stage.show();
 		
+	}
+
+	protected void setDataFields(BusinessCard card) {
+		// TODO Auto-generated method stub	
+	}
+	
+	protected void updateCard(BusinessCard card) {
+		// TODO Auto-generated method stub
+	}
+	
+	public void setFieldsEditable(boolean set){
+		// TODO 
 	}
 	
 

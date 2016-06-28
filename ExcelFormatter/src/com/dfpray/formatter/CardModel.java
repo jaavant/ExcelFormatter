@@ -47,7 +47,17 @@ public class CardModel {
 	private ArrayList<BusinessCard> parseRAWCards(String address) throws IOException{	
 		ArrayList<BusinessCard> bCards = new ArrayList<BusinessCard>();
 		String line;
+		String ext;
 		boolean first = false;
+		int numQuo = 0;
+		
+		ext = "." + getFileExtension(address);
+		
+		//System.out.println("Add: " + address + " Ext: " + ext);
+		
+		if(!(ext.equals(".txt") || ext.equals(".xlsx"))){
+			throw new IOException();
+		}
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(address))){
 			//Check if no more lines with null
@@ -57,15 +67,19 @@ public class CardModel {
 				}
 				//Skip first line
 				if(!first){
+					if( (numQuo = checkFormat(line)) != 110) break; //try with close workaround
 					first = true;
 					continue;
 				}
 				
 				bCards.add(new BusinessCard(line));
-				
-				
+							
 			}	
 		}
+		
+		if(numQuo != 110) throw new IOException();
+		
+		
 		return bCards;
 	}
 	
@@ -251,7 +265,19 @@ public class CardModel {
 
 	}
 	
-	
+
+	/** 
+	 * Get file extension
+	 * @param ext Address to File
+	 * @return extension of file (.) included
+	 */
+	private String getFileExtension(String name) {
+	    try {
+	        return name.substring(name.lastIndexOf(".") + 1);
+	    } catch (Exception e) {
+	        return "";
+	    }
+	}
 	
 	
 	
@@ -270,6 +296,37 @@ public class CardModel {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Small format checker
+	 * @param line a line of the text file
+	 * @return number of quotation marks in a line
+	 */
+	public int checkFormat(String line){
+		int counter = 0;
+		
+		for( int i=0; i<line.length(); i++ ) {
+		    if( line.charAt(i) == '"' ) {
+		        counter++;
+		    } 
+		}
+		
+		//System.out.println("Number of  quotation marks: " + counter);
+		return counter;
+	}
+	
+	/**
+	 * Gets card 
+	 * @param id Id of card
+	 * @return Card that was searched for
+	 * @throws IncompleteException
+	 */
+	public BusinessCard getCard(UUID id) throws IncompleteException{
+		for(BusinessCard card : cards){
+			if(card.getUI().equals(id)) return card;
+		}
+		throw new IncompleteException("Card does not exist");
 	}
 	
 }
