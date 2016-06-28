@@ -15,7 +15,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -27,7 +26,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -145,20 +143,68 @@ public class Main extends Application {
 			rightPane.setMinSize(1025, 1500);
 
 		
-				Label busLabel = new Label("Business Name");
+				Label busLabel = new Label("Company Name");
 				busLabel.setStyle("-fx-font: 45 Verdana;");
 				
 				TitledPane comNotesTP;
 					TextArea comNotesTA = new TextArea();
 					comNotesTA.setWrapText(true);
 					comNotesTA.setStyle("-fx-font:15 Verdana");
+					comNotesTA.setPadding(new Insets(5,5,5,5));
 					
 								
 				comNotesTP = new TitledPane("Company Notes",comNotesTA);
-				comNotesTP.setMaxWidth(800);
+				comNotesTP.setMaxWidth(750);
 				comNotesTP.setMaxHeight(200);
 				comNotesTP.setCollapsible(false);
 				comNotesTP.setPadding(new Insets(70,0,0,0));
+				
+				
+				TitledPane comTP = new TitledPane();
+				GridPane comGP = new GridPane();
+					comGP.setHgap(13);
+					comGP.setVgap(10);
+					
+					Label lbStreet = new Label("Street Address:");
+					lbStreet.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbStreet, HPos.RIGHT);
+					TextField tfStreet = new TextField();
+						
+					Label lbSuitePO = new Label("Suite/P.O. Box:");
+					lbSuitePO.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbSuitePO, HPos.RIGHT);
+					TextField tfSuitePO = new TextField();
+						
+					Label lbCity = new Label("City:");
+					lbCity.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbCity, HPos.RIGHT);
+					TextField tfCity = new TextField();
+						
+					Label lbState = new Label("State:");
+					lbState.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbState, HPos.RIGHT);
+					TextField tfState = new TextField();
+						
+					Label lbCountry = new Label("Country:");
+					lbCountry.setStyle("-fx-font: 12 Verdana;");
+					GridPane.setHalignment(lbCountry, HPos.RIGHT);
+					TextField tfCountry = new TextField();
+			
+					comGP.add(lbStreet, 0,0);  comGP.add(tfStreet, 1, 0);
+					comGP.add(lbSuitePO, 0, 1);  comGP.add(tfSuitePO, 1, 1);
+					comGP.add(lbCity, 0, 2);   comGP.add(tfCity, 1, 2);
+					comGP.add(lbState, 2, 0); comGP.add(tfState, 3, 0);
+					comGP.add(lbCountry, 2, 1); comGP.add(tfCountry, 3, 1);
+						
+					//mandGP.setGridLinesVisible(true);
+					comGP.setPadding(new Insets(10,10,10,10));
+						
+			comTP.setText("Company");
+			comTP.setContent(comGP);
+			comTP.setCollapsible(false);
+			comTP.setMaxWidth(750);
+				
+				
 				
 				TitledPane mandTP = new TitledPane();
 					GridPane mandGP = new GridPane();
@@ -201,7 +247,7 @@ public class Main extends Application {
 				mandTP.setText("Mandatory");
 				mandTP.setContent(mandGP);
 				mandTP.setCollapsible(false);
-				mandTP.setMaxWidth(800);
+				mandTP.setMaxWidth(750);
 					
 				
 				TitledPane conTP = new TitledPane();
@@ -238,16 +284,106 @@ public class Main extends Application {
 						//conGP.setGridLinesVisible(true);
 						conGP.setPadding(new Insets(10,10,10,10));
 							
-			conTP.setText("Contact");
-			conTP.setContent(conGP);
-			conTP.setCollapsible(false);
-			conTP.setMaxWidth(800);
+					conTP.setText("Contact");
+					conTP.setContent(conGP);
+					conTP.setCollapsible(false);
+					conTP.setMaxWidth(750);
+						
+					
+				TitledPane repTP = new TitledPane();
+					GridPane repGP = new GridPane();
+					repGP.setHgap(13);
+					repGP.setVgap(10);
+					repGP.setPadding(new Insets(10, 10, 10, 32));
+						
+						Label lbFName = new Label("First Name:");
+						lbFName.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbFName, HPos.RIGHT);
+						TextField tfFName= new TextField();
+							
+						Label lbLName = new Label("Last Name:");
+						lbLName.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbLName, HPos.RIGHT);
+						TextField tfLName = new TextField();
+							
+						Label lbTitle = new Label("Title:");
+						lbTitle.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbTitle, HPos.RIGHT);
+						TextField tfTitle = new TextField();
+							
+						Label lbMobile = new Label("Mobile:");
+						lbMobile.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbMobile, HPos.RIGHT);
+						TextField tfMobile= new TextField();
+							
+						repGP.add(lbFName, 0,0);  	 repGP.add(tfFName, 1, 0);
+						repGP.add(lbLName, 0, 1);  	 repGP.add(tfLName, 1, 1);
+						repGP.add(lbTitle, 3, 0);    repGP.add(tfTitle, 4, 0);
+						repGP.add(lbMobile, 3, 1);   repGP.add(tfMobile, 4, 1);
+		
+							
+				repTP.setText("Representative");
+				repTP.setContent(repGP);
+				repTP.setCollapsible(false);
+				repTP.setMaxWidth(750);
+		
+			
+				TitledPane cfTP = new TitledPane();
+					GridPane cfGP = new GridPane();
+						cfGP.setHgap(13);
+						cfGP.setVgap(10);
 				
-				
-			rightPane.getChildren().addAll(busLabel,comNotesTP, mandTP,conTP);
+						Label lbAEmail = new Label("Alt Email:");
+						lbAEmail.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbAEmail, HPos.RIGHT);
+						TextField tfAEmail = new TextField();
+					
+						Label lbSupplier= new Label("Supplier/Manufacturer:");
+						lbSupplier.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbSupplier, HPos.RIGHT);
+						TextField tfSupplier = new TextField();
+					
+						Label lbTrade = new Label("Trade:");
+						lbTrade.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbTrade, HPos.RIGHT);
+						TextField tfTrade = new TextField();
+					
+						Label lbUnion = new Label("Union Value:");
+						lbUnion.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbUnion, HPos.RIGHT);
+						TextField tfUnion = new TextField();
+					
+						Label lbUnlic = new Label("Unlicensed States:");
+						lbUnlic.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbUnlic, HPos.RIGHT);
+						TextField tfUnlic = new TextField();
+						
+						Label lbWNB = new Label("Will Not Bid:");
+						lbWNB.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbWNB, HPos.RIGHT);
+						TextField tfWNB= new TextField();
+		
+		
+					cfGP.add(lbAEmail, 0,0);    cfGP.add(tfAEmail, 1, 0);
+					cfGP.add(lbSupplier, 0, 1);  cfGP.add(tfSupplier, 1, 1);
+					cfGP.add(lbTrade, 0, 2);   cfGP.add(tfTrade, 1, 2);
+					cfGP.add(lbUnion, 2, 0); cfGP.add(tfUnion, 3, 0);
+					cfGP.add(lbUnlic, 2, 1); cfGP.add(tfUnlic, 3, 1);
+					cfGP.add(lbWNB, 2, 2); cfGP.add(tfWNB, 3, 2);
+					
+					//cfGP.setGridLinesVisible(true);
+					cfGP.setPadding(new Insets(10,10,10,10));
+					
+				cfTP.setText("CF Info");
+				cfTP.setContent(cfGP);
+				cfTP.setCollapsible(false);
+				cfTP.setMaxWidth(750);	
+			
+			
+			rightPane.getChildren().addAll(busLabel,comNotesTP,mandTP,comTP,conTP,repTP,cfTP);
 
 			scrollPane = new ScrollPane(rightPane);
-			scrollPane.setStyle("-fx-font-size: 18px;"); 
+			scrollPane.setStyle("-fx-font-size: 15px;"); 
 			scrollPane.setFitToWidth(true);
 		    // DEBUG rightPane.setStyle("-fx-background-color: blue");
 		   
@@ -261,9 +397,9 @@ public class Main extends Application {
 		
 		//BottomPane////////////////////////////////
 		HBox bottomPane = new HBox();
-		bottomPane.setMaxHeight(45);
-		bottomPane.setMinHeight(45);
-		                                               //bottomPane.setStyle("-fx-background-color: red");
+		bottomPane.setMaxHeight(50);
+		bottomPane.setMinHeight(50);
+		//bottomPane.setStyle("-fx-background-color: red");
 		root.getChildren().add(bottomPane);
 		////////////////////////////////////////////
 		

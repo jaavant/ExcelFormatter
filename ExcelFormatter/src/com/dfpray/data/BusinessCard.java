@@ -87,8 +87,8 @@ public class BusinessCard {
 				case 5:	 rep.setTitle(phrase);	        break;		//title
 				case 6:	 company.setCompanyName(phrase); break;		//Company
 				case 7:	 company.setStreetAdd(phrase);	break;		//Address
-				case 10: company.setCity(phrase);	break;		    //city, state
-				case 11: company.setState(phrase); break;
+				case 10: company.setCity(phrase);	break;		    //city
+				case 11: company.setState(phrase); break;           //state
 				case 12: company.setZipcode(phrase); break;			//zip code
 				case 13: company.setCountry(phrase);   break;		//country
 				case 21: contacts.setPhoneNum(phrase); break;		//phone

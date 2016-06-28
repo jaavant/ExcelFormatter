@@ -232,6 +232,8 @@ public class CardModel {
 	    		cardInfo = info[k];
 	    		cell = row.createCell(k);
 	    		
+	    		if(k == 24) continue;
+	    		
 	    		try{
 	    			number = Double.parseDouble(cardInfo);
 	    			cell.setCellValue(number);
