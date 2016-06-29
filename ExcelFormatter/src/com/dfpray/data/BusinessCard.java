@@ -16,8 +16,7 @@ public class BusinessCard {
 	
 	//Cannot be empty, throw incomplete card exception
 	// private String companyName, faxNumber , emailAddress, csiCodes, companyFunction;		             
-	
-	
+
 	/**
 	 * Constructor for BC, takes in unsanitized info
 	 * @param info String containing BC info with "" delimeters
@@ -37,6 +36,31 @@ public class BusinessCard {
 		id = UUID.randomUUID();
 	}
 
+	
+    public String getInfo(){
+    	return this.info;
+    }
+    
+    public Misc getMisc(){
+    	return this.misc;
+    }
+    
+    public CFInfo getCFInfo(){
+    	return this.cfInfo;
+    }
+    
+    public Company getCompany(){
+    	return this.company;
+    }
+    
+    public Representative getRep(){
+    	return this.rep;
+    }
+	
+    public Contacts getContacts(){
+    	return this.contacts;
+    }
+	
 	/**
 	 * Updates cards info dataS
 	 * @param c Contacts data

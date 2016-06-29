@@ -46,6 +46,14 @@ public class Main extends Application {
 	TextArea comNotesTA;
 	File openedfile;
 	
+	TitledPane otherTP;
+	TitledPane cfTP;
+	TitledPane conTP;
+	TitledPane repTP;
+	TitledPane mandTP;
+	TitledPane comTP;
+	
+	TitledPane comNotesTP;
 	TextField tfStreet;
 	TextField tfSuitePO;
 	TextField tfCity;
@@ -118,33 +126,30 @@ public class Main extends Application {
         		    }
         		});
         		
-//        		
-//        		//Open file and fill viewlist 
-//        		openMI.setOnAction(new EventHandler<ActionEvent>(){
-//					public void handle(ActionEvent e) {
-//						File file = fileChooser.showOpenDialog(stage);					
-//						Alert alert = new Alert(AlertType.WARNING);
-//						alert.setTitle("Error");
-//						
-//	                    if (file != null) {
-//	                    	try {
-//								cardModel.addCards(file.getAbsolutePath());
-//							} catch (IncompleteException e1) {
-//								alert.setHeaderText("File Does Not Exist");
-//								alert.setContentText("Oops there was an Error");
-//							} catch (IOException e1) {
-//								alert.setHeaderText("IOException");
-//								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-//
-//								alert.showAndWait();
-//							}
-//	                 	                    	                    	
-//	        		    	observableList = FXCollections.observableList(cardModel.getCards());
-//	        		    	listView.setItems(observableList);
-//	        		    	
-//	                    }
-//					}      			
-//        		});    		
+        		
+        		//Open file and fill viewlist 
+        		openMI.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent e) {
+						File file = fileChooser.showOpenDialog(stage);					
+						Alert alert = new Alert(AlertType.WARNING);
+						alert.setTitle("Error");
+						
+	                    if (file != null) {
+	                    	try {
+								cardModel.addCards(file.getAbsolutePath());
+							} catch (IncompleteException e1) {
+								alert.setHeaderText("File Does Not Exist");
+								alert.setContentText("Oops there was an Error");
+							} catch (IOException e1) {
+								alert.setHeaderText("IOException");
+								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+
+								alert.showAndWait();
+							}
+	                 	    updateViewList();	        		    	
+	                    }
+					}      			
+        		});    		
         		
         		//List view listener, changes the data fields according to the selected company
         		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
@@ -230,7 +235,6 @@ public class Main extends Application {
 				busLabel = new Label("Company Name");
 				busLabel.setStyle("-fx-font: 45 Verdana;");
 				
-				TitledPane comNotesTP;
 					comNotesTA = new TextArea();
 					comNotesTA.setWrapText(true);
 					comNotesTA.setStyle("-fx-font:15 Verdana");
@@ -245,44 +249,44 @@ public class Main extends Application {
 				comNotesTP.setPadding(new Insets(70,0,0,0));
 				
 				
-				TitledPane comTP = new TitledPane();
-				GridPane comGP = new GridPane();
-					comGP.setHgap(13);
-					comGP.setVgap(10);
+				comTP = new TitledPane();
+					GridPane comGP = new GridPane();
+						comGP.setHgap(13);
+						comGP.setVgap(10);
 					
-					Label lbStreet = new Label("Street Address:");
-					lbStreet.setStyle("-fx-font: 12 Verdana;");
-					GridPane.setHalignment(lbStreet, HPos.RIGHT);
-					tfStreet = new TextField();
-						
-					Label lbSuitePO = new Label("Suite/P.O. Box:");
-					lbSuitePO.setStyle("-fx-font: 12 Verdana;");
-					GridPane.setHalignment(lbSuitePO, HPos.RIGHT);
-					tfSuitePO = new TextField();
-						
-					Label lbCity = new Label("City:");
-					lbCity.setStyle("-fx-font: 12 Verdana;");
-					GridPane.setHalignment(lbCity, HPos.RIGHT);
-					tfCity = new TextField();
-						
-					Label lbState = new Label("State:");
-					lbState.setStyle("-fx-font: 12 Verdana;");
-					GridPane.setHalignment(lbState, HPos.RIGHT);
-					tfState = new TextField();
-						
-					Label lbCountry = new Label("Country:");
-					lbCountry.setStyle("-fx-font: 12 Verdana;");
-					GridPane.setHalignment(lbCountry, HPos.RIGHT);
-					tfCountry = new TextField();
-			
-					comGP.add(lbStreet, 0,0);  comGP.add(tfStreet, 1, 0);
-					comGP.add(lbSuitePO, 0, 1);  comGP.add(tfSuitePO, 1, 1);
-					comGP.add(lbCity, 0, 2);   comGP.add(tfCity, 1, 2);
-					comGP.add(lbState, 2, 0); comGP.add(tfState, 3, 0);
-					comGP.add(lbCountry, 2, 1); comGP.add(tfCountry, 3, 1);
-						
-					//mandGP.setGridLinesVisible(true);
-					comGP.setPadding(new Insets(10,10,10,10));
+						Label lbStreet = new Label("Street Address:");
+						lbStreet.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbStreet, HPos.RIGHT);
+						tfStreet = new TextField();
+							
+						Label lbSuitePO = new Label("Suite/P.O. Box:");
+						lbSuitePO.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbSuitePO, HPos.RIGHT);
+						tfSuitePO = new TextField();
+							
+						Label lbCity = new Label("City:");
+						lbCity.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbCity, HPos.RIGHT);
+						tfCity = new TextField();
+							
+						Label lbState = new Label("State:");
+						lbState.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbState, HPos.RIGHT);
+						tfState = new TextField();
+							
+						Label lbCountry = new Label("Country:");
+						lbCountry.setStyle("-fx-font: 12 Verdana;");
+						GridPane.setHalignment(lbCountry, HPos.RIGHT);
+						tfCountry = new TextField();
+				
+						comGP.add(lbStreet, 0,0);  comGP.add(tfStreet, 1, 0);
+						comGP.add(lbSuitePO, 0, 1);  comGP.add(tfSuitePO, 1, 1);
+						comGP.add(lbCity, 0, 2);   comGP.add(tfCity, 1, 2);
+						comGP.add(lbState, 2, 0); comGP.add(tfState, 3, 0);
+						comGP.add(lbCountry, 2, 1); comGP.add(tfCountry, 3, 1);
+							
+						//mandGP.setGridLinesVisible(true);
+						comGP.setPadding(new Insets(10,10,10,10));
 						
 			comTP.setText("Company");
 			comTP.setContent(comGP);
@@ -292,7 +296,7 @@ public class Main extends Application {
 				
 				
 				
-				TitledPane mandTP = new TitledPane();
+				mandTP = new TitledPane();
 					GridPane mandGP = new GridPane();
 						mandGP.setHgap(13);
 						mandGP.setVgap(10);
@@ -338,7 +342,7 @@ public class Main extends Application {
 				mandTP.setMaxWidth(750);
 					
 				
-				TitledPane conTP = new TitledPane();
+				conTP = new TitledPane();
 					GridPane conGP = new GridPane();
 						conGP.setHgap(13);
 						conGP.setVgap(10);
@@ -379,7 +383,7 @@ public class Main extends Application {
 					conTP.setMaxWidth(750);
 						
 					
-				TitledPane repTP = new TitledPane();
+				repTP = new TitledPane();
 					GridPane repGP = new GridPane();
 					repGP.setHgap(13);
 					repGP.setVgap(10);
@@ -418,7 +422,7 @@ public class Main extends Application {
 				repTP.setMaxWidth(750);
 		
 			
-				TitledPane cfTP = new TitledPane();
+				cfTP = new TitledPane();
 					GridPane cfGP = new GridPane();
 						cfGP.setHgap(13);
 						cfGP.setVgap(10);
@@ -471,7 +475,7 @@ public class Main extends Application {
 				cfTP.setMaxWidth(750);	
 			
 			
-			TitledPane otherTP = new TitledPane();
+			    otherTP = new TitledPane();
 				GridPane otherGP = new GridPane();
 					otherGP.setHgap(13);
 					otherGP.setVgap(10);
@@ -540,17 +544,95 @@ public class Main extends Application {
 		
 	}
 
+	/**
+	 * Changes the 
+	 * @param card Card which data is to be shown
+	 */
 	protected void setDataFields(BusinessCard card) {
-		// TODO Auto-generated method stub	
+			try {
+				card = cardModel.getCard(card.getUI());
+			} catch (IncompleteException e) {
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Warning");
+				alert.setHeaderText("EmptyListException | CardNotFoundException");
+				alert.setContentText("There was an error processing your request.");
+				alert.showAndWait();
+			}
+		
+			busLabel.setText(card.getCompany().getCompanyName());
+			
+			comNotesTA.setText(card.getMisc().getCompanyNotes());
+			tfStreet.setText(card.getCompany().getStreetAdd());
+			tfSuitePO.setText(card.getCompany().getStreetAdd());
+			tfCity.setText(card.getCompany().getStreetAdd());
+			tfState.setText(card.getCompany().getState());
+			tfCountry.setText(card.getCompany().getCountry());
+			tfComName.setText(card.getCompany().getCompanyName());
+			tfFaxNum.setText(card.getContacts().getFaxNumber());
+			tfEmail.setText(card.getContacts().getEmailAddress());
+			tfcsiCode.setText(card.getMisc().getCsiCodes());
+			tfComFunc.setText(card.getCompany().getCompanyFunction());
+			tfphNum.setText(card.getContacts().getPhoneNum());
+			tfExt.setText(card.getContacts().getExt());
+			tfWebsite.setText(card.getContacts().getEmailAddress());
+			tfContactL.setText(card.getContacts().getContactLists());
+			tfFName.setText(card.getRep().getContactFirstName());
+			tfLName.setText(card.getRep().getContactLastName());
+			tfTitle.setText(card.getRep().getTitle());
+			tfMobile.setText(card.getRep().getMobilePhone());
+			tfAEmail.setText(card.getCFInfo().getCf_AltEmail());
+			tfSupplier.setText(card.getCFInfo().getCf_SupplierManf());
+			tfTrade.setText(card.getCFInfo().getCf_Trade());
+			tfUnion.setText(card.getCFInfo().getCf_UnionValue());
+			tfUnlic.setText(card.getCFInfo().getCf_UnlicensedStates());
+			tfWNB.setText(card.getCFInfo().getCf_WillNotBid());
+			tfMbe.setText(card.getMisc().getMbeaffiliations());
+			tfLabor.setText(card.getMisc().getLabor());
+			tfServiceA.setText(card.getMisc().getServiceArea());
 	}
 	
+	/**
+	 * Updates a cards data to cardModel
+	 * @param card Card which data is to be updates
+	 */
 	protected void updateCard(BusinessCard card) {
-		// TODO Auto-generated method stub
+		try {
+			cardModel.updateCard(card.getUI(), card.getContacts(), card.getRep(), card.getCompany(), card.getCFInfo(), card.getMisc(),card.getInfo());
+			updateViewList();
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning");
+			alert.setHeaderText("EmptyListException | CardNotFoundException");
+			alert.setContentText("There was an error processing your request.");
+			alert.showAndWait();
+		}
 	}
 	
-	public void setFieldsEditable(boolean set){
-		// TODO 
+	protected void setFieldsEditable(boolean set){
+		if(set){
+			otherTP.setDisable(false);
+			cfTP.setDisable(false);
+			conTP.setDisable(false);
+			repTP.setDisable(false);
+			mandTP.setDisable(false);
+			comTP.setDisable(false); 
+		}
+		else{
+			otherTP.setDisable(true);
+			cfTP.setDisable(true);
+			conTP.setDisable(true);
+			repTP.setDisable(true);
+			mandTP.setDisable(true);
+			comTP.setDisable(true); 
+		}
 	}
+	
+	protected void updateViewList(){
+		observableList = FXCollections.observableList(cardModel.getCards());
+    	listView.setItems(observableList);
+	}
+	
+	
 	
 
 }

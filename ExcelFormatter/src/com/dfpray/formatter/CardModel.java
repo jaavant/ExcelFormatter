@@ -303,7 +303,7 @@ public class CardModel {
 	 * @param line a line of the text file
 	 * @return number of quotation marks in a line
 	 */
-	public int checkFormat(String line){
+	private int checkFormat(String line){
 		int counter = 0;
 		
 		for( int i=0; i<line.length(); i++ ) {
