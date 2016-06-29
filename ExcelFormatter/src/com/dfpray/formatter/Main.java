@@ -126,6 +126,7 @@ public class Main extends Application {
         		    }
         		});
         		
+<<<<<<< HEAD
         		
         		//Open file and fill viewlist 
         		openMI.setOnAction(new EventHandler<ActionEvent>(){
@@ -150,18 +151,47 @@ public class Main extends Application {
 	                    }
 					}      			
         		});    		
+=======
+>>>>>>> origin/master
         		
-        		//List view listener, changes the data fields according to the selected company
-        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
-        			@Override
-        			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
-        				try {
-							setDataFields(cardModel.getCard(newValue.getUI()));
-						} catch (IncompleteException e) {
-							e.printStackTrace();					
-						}
-        			}
-      		});
+        		//Open file and fill viewlist 
+        		openMI.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent e) {
+						File file = fileChooser.showOpenDialog(stage);					
+						Alert alert = new Alert(AlertType.WARNING);
+						alert.setTitle("Error");
+						
+	                    if (file != null) {
+	                    	try {
+								cardModel.addCards(file.getAbsolutePath());
+							} catch (IncompleteException e1) {
+								alert.setHeaderText("File Does Not Exist");
+								alert.setContentText("Oops there was an Error");
+							} catch (IOException e1) {
+								alert.setHeaderText("IOException");
+								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+
+								alert.showAndWait();
+							}
+	                 	                    	                    	
+	        		    	observableList = FXCollections.observableList(cardModel.getCards());
+	        		    	listView.setItems(observableList);
+	        		    	
+	                    }
+					}      			
+        		});    		
+        		
+ //       		//List view listener, changes the data fields according to the selected company
+ //       		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
+ //       			@Override
+ //       			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
+ //       				try {
+//							setDataFields(cardModel.getCard(newValue.getUI()));
+//						} catch (IncompleteException e) {
+//							e.printStackTrace();					
+//						}
+//       			}
+//      		});
        		
         		
         		
