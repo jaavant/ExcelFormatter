@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.dfpray.data.*;
-import com.dfpray.exception.CardNotFoundException;
-import com.dfpray.exception.EmptyListException;
 import com.dfpray.exception.IncompleteException;
 
 import javafx.application.Application;
@@ -44,7 +42,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	
 	FileChooser fileChooser;
-	CardModel cardModel = new CardModel();
+	CardModel cardModel;
 	ObservableList<BusinessCard> observableList;
 	ListView<BusinessCard> listView;
 	
@@ -94,6 +92,7 @@ public class Main extends Application {
 	
 	Button addAccBtn;
 	Button delAccBtn;
+	TextField searchTF;
 	
 	
 	public static void main(String args[]){
@@ -107,7 +106,8 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {	
+	public void start(Stage stage) throws Exception {
+		cardModel = new CardModel();
 		editing = false;
 		
 		// File Chooser
@@ -512,9 +512,10 @@ public class Main extends Application {
 		
 		
 		//Stage
+		
 		stage.setTitle("D.F. Pray Formatter");
-		stage.setMinWidth(1300);
-		stage.setMinHeight(900);
+		stage.setMinWidth(500);
+		stage.setMinHeight(500);
 		stage.setScene(scene);
 		stage.show();
 		
@@ -584,6 +585,7 @@ public class Main extends Application {
 		//Edit button which disables and enables fields
     		editBtn.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent arg0) {
+					if(observableList.isEmpty()) return; //so user can't edit a non existent page
 					if(!editing){
 						listView.setDisable(true);
 						setFieldsEditable(true);
@@ -622,7 +624,7 @@ public class Main extends Application {
 						listView.getSelectionModel().select(card);
 						listView.scrollTo(card);
 					} catch (IncompleteException e) {
-						// TODO IDk?
+						// TODO collision between UI.. which would be a 1 and very high chance.. fix sometime
 					}	
     				
     			}
@@ -632,6 +634,10 @@ public class Main extends Application {
     		try {
 				delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent arg0){
+						if(observableList.isEmpty()) return; //cant delete nothing
+						
+						System.out.println("ActionLisener: trying to reomve card");
+						
 						BusinessCard card  = listView.getSelectionModel().getSelectedItem();
 						
 						Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -645,9 +651,11 @@ public class Main extends Application {
 								cardModel.removeCard(card.getUI());
 								updateViewList();
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
+								//Card doesnt exist..
 							}
-						} 
+						}
+						
+						System.out.println("Leaving ActionListener:.");
 					}
 				});
 			} catch (Exception e) {
@@ -714,7 +722,7 @@ public class Main extends Application {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
 				alert.setHeaderText("EmptyListException | CardNotFoundException");
-				alert.setContentText("There was an error processing your request.");
+				alert.setContentText("There was an error processing your request %1.");
 				alert.showAndWait();
 			}	
 	}
@@ -737,7 +745,7 @@ public class Main extends Application {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Error");
 			alert.setHeaderText("EmptyListException | CardNotFoundException");
-			alert.setContentText("There was an error processing your request.");
+			alert.setContentText("There was an error processing your request %2.");
 			alert.showAndWait();
 		}
 	}
@@ -766,9 +774,12 @@ public class Main extends Application {
 	}
 	
 	protected void updateViewList(){
-		FXCollections.sort(observableList);
-    	listView.refresh();
-		//listView.setItems(observableList);
+		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
+		listView.setItems(observableList);
+		
+		for(BusinessCard card : observableList){
+			System.out.println(card.toString() + " " + card.getUI().toString());
+		}
 	}
 	
 	

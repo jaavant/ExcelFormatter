@@ -34,7 +34,7 @@ public class CardModel {
 	}
 	
 	public void addCards(String path) throws IncompleteException, IOException{
-		this.cards = parseRAWCards(path);
+		this.cards.addAll(parseRAWCards(path));
 		checkCollision();
 	}
 	
@@ -97,8 +97,13 @@ public class CardModel {
 	 * @throws IncompleteException 
 	 */
 	public void addCard(BusinessCard card) throws IncompleteException{
+		
+		System.out.println("Trying to add card...");
+		
 		cards.add(card);
 		checkCollision();
+		
+		System.out.println("Added Card.");
 	}
 	
 	
@@ -109,14 +114,19 @@ public class CardModel {
 	 * @throws CardNotFoundException 
 	 */
 	public void removeCard(UUID id) throws EmptyListException, CardNotFoundException{
+		
+		System.out.println("trying to remove card...");
+		
 		if(cards.size() == 0) throw new EmptyListException();
 		
 		for(BusinessCard card: cards){
 			if(card.getUI().equals(id)){
-				cards.remove(card);
+				cards.remove(card);    System.out.println("Removed Card");
 				return;
 			}
 		}
+		
+		System.out.println("Couldn't find card...");
 		throw new CardNotFoundException();
 	}
 	
@@ -324,9 +334,12 @@ public class CardModel {
 	 * @throws IncompleteException
 	 */
 	public BusinessCard getCard(UUID id) throws IncompleteException{
+		
+		System.out.println("Searching for card...");
 		for(BusinessCard card : cards){
-			if(card.getUI().equals(id)) return card;
+			if(card.getUI().equals(id))    System.out.println("Found Card"); return card;
 		}
+		System.out.println("Card  not found");
 		throw new IncompleteException("Card does not exist");
 	}
 	
