@@ -85,7 +85,9 @@ public class Main extends Application {
 	TextField tfLabor;	
 	TextField tfServiceA;
 
-
+	boolean editing;
+	Button editBtn;
+	
 	
 	public static void main(String args[]){
 		/* TODO 
@@ -99,7 +101,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {	
-	
+		editing = false;
+		
 		// File Chooser
 		fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
@@ -121,76 +124,7 @@ public class Main extends Application {
         		MenuItem exportMI = new MenuItem("Export");
         		MenuItem saveAsMI = new MenuItem("Save As");
         		MenuItem exitMI = new MenuItem("Exit");
-        		
-        		//Event Handlers///////
-        		exitMI.setOnAction(new EventHandler<ActionEvent>(){
-        			public void handle(ActionEvent e) {
-        				System.exit(0);
-        		    }
-        		});
-        		
-
-        		//Open file and fill viewlist 
-        		openMI.setOnAction(new EventHandler<ActionEvent>(){
-					public void handle(ActionEvent e) {
-						File file = fileChooser.showOpenDialog(stage);					
-						Alert alert = new Alert(AlertType.WARNING);
-						alert.setTitle("Error");
-						
-	                    if (file != null) {
-	                    	try {
-								cardModel.addCards(file.getAbsolutePath());
-							} catch (IncompleteException e1) {
-								alert.setHeaderText("File Does Not Exist");
-								alert.setContentText("Oops there was an Error");
-							} catch (IOException e1) {
-								alert.setHeaderText("IOException");
-								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-
-								alert.showAndWait();
-							}
-	                 	    updateViewList();	        		    	
-	                    }
-					}      			
-        		});    		
-
-        		
-        		//Open file and fill viewlist 
-        		openMI.setOnAction(new EventHandler<ActionEvent>(){
-					public void handle(ActionEvent e) {
-						File file = fileChooser.showOpenDialog(stage);					
-						Alert alert = new Alert(AlertType.WARNING);
-						alert.setTitle("Error");
-						
-	                    if (file != null) {
-	                    	try {
-								cardModel.addCards(file.getAbsolutePath());
-							} catch (IncompleteException e1) {
-								alert.setHeaderText("File Does Not Exist");
-								alert.setContentText("Oops there was an Error");
-							} catch (IOException e1) {
-								alert.setHeaderText("IOException");
-								alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-
-								alert.showAndWait();
-							}
-	                 	                    	                    	
-	        		    	observableList = FXCollections.observableList(cardModel.getCards());
-	        		    	listView.setItems(observableList);
-	        		    	
-	                    }
-					}      			
-        		});    		
-        		
-        		// ListView Listener, changes text fields for the selected B.C in ViewLsit
-        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
-					@Override
-					public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-						setDataFields(newVal.getUI());
-						
-					}
-        		});
-      		
+        		     		
         		
         		
         	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, exportMI,exitMI);
@@ -248,7 +182,7 @@ public class Main extends Application {
 			
 				//Top Pane///////////////
 				VBox buttonPane = new VBox(5);
-				Button editBtn = new Button("Edit");
+				editBtn = new Button("Edit");
 				editBtn.setStyle("-fx-base: #e6f3ff");
 		
 				buttonPane.setMaxWidth(760);
@@ -576,6 +510,113 @@ public class Main extends Application {
 		stage.setScene(scene);
 		stage.show();
 		
+		
+		//Event Handlers///////
+		exitMI.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e) {
+				System.exit(0);
+		    }
+		});
+		
+
+		//Open file and fill viewlist 
+		openMI.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e) {
+				File file = fileChooser.showOpenDialog(stage);					
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				
+                if (file != null) {
+                	try {
+						cardModel.addCards(file.getAbsolutePath());
+					} catch (IncompleteException e1) {
+						alert.setHeaderText("File Does Not Exist");
+						alert.setContentText("Oops there was an Error");
+					} catch (IOException e1) {
+						alert.setHeaderText("IOException");
+						alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+
+						alert.showAndWait();
+					}
+             	    updateViewList();	        		    	
+                }
+			}      			
+		});    		
+
+		
+		//Open file and fill viewlist 
+		openMI.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e) {
+				File file = fileChooser.showOpenDialog(stage);					
+				Alert alert = new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				
+                if (file != null) {
+                	try {
+						cardModel.addCards(file.getAbsolutePath());
+					} catch (IncompleteException e1) {
+						alert.setHeaderText("File Does Not Exist");
+						alert.setContentText("Oops there was an Error");
+					} catch (IOException e1) {
+						alert.setHeaderText("IOException");
+						alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
+
+						alert.showAndWait();
+					}
+             	                    	                    	
+    		    	observableList = FXCollections.observableList(cardModel.getCards());
+    		    	listView.setItems(observableList);
+    		    	
+                }
+			}      			
+		});    		
+		
+		//Edit button which disables and enables fields
+    		editBtn.setOnAction(new EventHandler<ActionEvent>(){
+				public void handle(ActionEvent arg0) {
+					if(!editing){
+						listView.setDisable(true);
+						setFieldsEditable(true);
+						editBtn.setText("Done");
+						editBtn.setStyle("-fx-base: #ccffdd");
+					}
+					else{
+						try {
+							UUID id = listView.getSelectionModel().getSelectedItem().getUI(); // DEBUG System.out.println(id.toString());	
+							updateCard(id);
+							updateViewList();
+						} catch (NullPointerException e) {
+							//Nothing is there
+						}
+						finally{
+							listView.setDisable(false);
+							setFieldsEditable(false);
+							updateViewList();
+							editBtn.setText(" Edit ");
+							editBtn.setStyle("-fx-base: #e6f3ff");
+						}
+					}
+					
+					editing = !editing;
+				}
+    		});
+	
+		
+		
+
+		
+		// ListView Listener, changes text fields for the selected B.C in ViewList
+		try {
+			listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
+				@Override
+				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
+					setDataFields(newVal.getUI());		
+				}
+			});
+		} catch (NullPointerException e1) {
+			// Do nothing
+		}
+		
 	}
 
 	/**
@@ -650,6 +691,7 @@ public class Main extends Application {
 	
 	protected void setFieldsEditable(boolean set){
 		if(set){
+			comNotesTP.setDisable(false);
 			otherTP.setDisable(false);
 			cfTP.setDisable(false);
 			conTP.setDisable(false);
@@ -658,6 +700,7 @@ public class Main extends Application {
 			comTP.setDisable(false); 
 		}
 		else{
+			comNotesTP.setDisable(true);
 			otherTP.setDisable(true);
 			cfTP.setDisable(true);
 			conTP.setDisable(true);
