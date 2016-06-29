@@ -101,6 +101,7 @@ public class CardModel {
 		checkCollision();
 	}
 	
+	
 	/**
 	 * Removes a card with the sent UUID
 	 * @param id Unique Id of a card

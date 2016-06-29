@@ -2,9 +2,12 @@ package com.dfpray.formatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.dfpray.data.*;
+import com.dfpray.exception.CardNotFoundException;
+import com.dfpray.exception.EmptyListException;
 import com.dfpray.exception.IncompleteException;
 
 import javafx.application.Application;
@@ -21,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -88,6 +92,9 @@ public class Main extends Application {
 	boolean editing;
 	Button editBtn;
 	
+	Button addAccBtn;
+	Button delAccBtn;
+	
 	
 	public static void main(String args[]){
 		/* TODO 
@@ -106,9 +113,7 @@ public class Main extends Application {
 		// File Chooser
 		fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
-		//fileChooser.getExtensionFilters().addAll(new ExtensionFilter("TEXT files (*.txt)","*.txt"), 
-		//		new ExtensionFilter("Microsoft Excel Worksheet (.xlsx)", "*.xlsx"));
-	
+
 		//Root Pane
 		VBox root = new VBox();
 		
@@ -144,7 +149,7 @@ public class Main extends Application {
 			VBox leftPane = new VBox(5);
 			leftPane.setAlignment(Pos.CENTER);
 			leftPane.setPadding(new Insets(7,7,7,7));
-			leftPane.setMaxWidth(250); //20
+			leftPane.setMaxWidth(300); //20
 			leftPane.setMinWidth(190);
 			leftPane.setPrefWidth(220);
 			
@@ -152,18 +157,19 @@ public class Main extends Application {
 		    	TextField searchTF = new TextField();
 		    	searchTF.setPromptText("Search");
 		    	searchTF.setStyle("-fx-font: 14 Verdana;");
-		    	searchTF.setMaxWidth(190);
+		    	searchTF.setMaxWidth(250);
 		   
 		    	listView = new ListView<BusinessCard>();
+		    	listView.setStyle("-fx-font: 14 Verdana;");
 		    	observableList = FXCollections.observableList(cardModel.getCards());
 		    	listView.setItems(observableList);
 				listView.setMinHeight(700); 
-				listView.setMaxWidth(190);
+				listView.setMaxWidth(250);
 		    	
-		    	Button addAccBtn = new Button(" New Contact  ");
+		    	addAccBtn = new Button(" New Contact  ");
 		    	addAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #e6f3ff;");   // #b6e7c9;");
 		    	
-		    	Button delAccBtn = new Button("Delete Contact");
+		    	delAccBtn = new Button("Delete Contact");
 		    	delAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #e6f3ff;"); //#F74D60");
 
 			leftPane.getChildren().addAll(searchTF,listView,addAccBtn,delAccBtn);
@@ -195,7 +201,9 @@ public class Main extends Application {
 			
 		
 				busLabel = new Label("Company Name");
-				busLabel.setStyle("-fx-font: 45 Verdana;");
+				busLabel.setStyle("-fx-font: 30 Verdana;");
+				busLabel.setPadding(new Insets(10,0,0,0));
+				busLabel.setDisable(true);
 				
 					comNotesTA = new TextArea();
 					comNotesTA.setWrapText(true);
@@ -208,7 +216,7 @@ public class Main extends Application {
 				comNotesTP.setMaxWidth(750);
 				comNotesTP.setMaxHeight(200);
 				comNotesTP.setCollapsible(false);
-				comNotesTP.setPadding(new Insets(70,0,0,0));
+				comNotesTP.setPadding(new Insets(50,0,0,0));
 				
 				
 				comTP = new TitledPane();
@@ -517,48 +525,25 @@ public class Main extends Application {
 				System.exit(0);
 		    }
 		});
-		
-
+			
 		//Open file and fill viewlist 
 		openMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
-				File file = fileChooser.showOpenDialog(stage);					
-				Alert alert = new Alert(AlertType.WARNING);
+				File file = fileChooser.showOpenDialog(stage);
+							
+				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
+				
+				//TODO if observableList is not empty
 				
                 if (file != null) {
                 	try {
 						cardModel.addCards(file.getAbsolutePath());
 					} catch (IncompleteException e1) {
-						alert.setHeaderText("File Does Not Exist");
-						alert.setContentText("Oops there was an Error");
-					} catch (IOException e1) {
 						alert.setHeaderText("IOException");
-						alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-
-						alert.showAndWait();
-					}
-             	    updateViewList();	        		    	
-                }
-			}      			
-		});    		
-
-		
-		//Open file and fill viewlist 
-		openMI.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e) {
-				File file = fileChooser.showOpenDialog(stage);					
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Error");
-				
-                if (file != null) {
-                	try {
-						cardModel.addCards(file.getAbsolutePath());
-					} catch (IncompleteException e1) {
-						alert.setHeaderText("File Does Not Exist");
-						alert.setContentText("Oops there was an Error");
+						alert.setContentText("File Does Not Exist");
 					} catch (IOException e1) {
-						alert.setHeaderText("IOException");
+						alert.setHeaderText("MalFormattedFileException");
 						alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
 
 						alert.showAndWait();
@@ -569,7 +554,32 @@ public class Main extends Application {
     		    	
                 }
 			}      			
-		});    		
+		});
+		
+		//Export to excel 
+		exportMI.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e){
+				File file = fileChooser.showSaveDialog(stage);				
+				String path = file.getAbsolutePath();		
+				
+				if(file != null){
+					try {
+						if(path.endsWith(".xlsx")){
+							cardModel.exportToExcel(path);
+						}
+						else{
+							cardModel.exportToExcel(path + ".xlsx");
+						}
+					} catch (IOException e1) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error");
+						alert.setHeaderText("ExportToExcelException");
+						alert.setContentText("Oops, there was an error trying to process your command");
+					}
+				}
+				
+			}
+		});
 		
 		//Edit button which disables and enables fields
     		editBtn.setOnAction(new EventHandler<ActionEvent>(){
@@ -585,6 +595,7 @@ public class Main extends Application {
 							UUID id = listView.getSelectionModel().getSelectedItem().getUI(); // DEBUG System.out.println(id.toString());	
 							updateCard(id);
 							updateViewList();
+							busLabel.setText(tfComName.getText().trim());
 						} catch (NullPointerException e) {
 							//Nothing is there
 						}
@@ -600,10 +611,48 @@ public class Main extends Application {
 					editing = !editing;
 				}
     		});
-	
-		
-		
-
+    		
+    	//Adds an account to the ViewList and sorts it
+    		addAccBtn.setOnAction(new EventHandler<ActionEvent>(){
+    			public void handle(ActionEvent arg0){
+    				BusinessCard card = new BusinessCard();
+    				try {
+						cardModel.addCard(card);
+						updateViewList();
+						listView.getSelectionModel().select(card);
+						listView.scrollTo(card);
+					} catch (IncompleteException e) {
+						// TODO IDk?
+					}	
+    				
+    			}
+    		});
+    	
+    	// Removes an account from viewlist and sorts it
+    		try {
+				delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
+					public void handle(ActionEvent arg0){
+						BusinessCard card  = listView.getSelectionModel().getSelectedItem();
+						
+						Alert alert = new Alert(AlertType.CONFIRMATION);
+						alert.setTitle("Delete Contact");
+						alert.setHeaderText("You are about to delete a, " + card.getCompany().getCompanyName());
+						alert.setContentText("By pressing okay, this contact will permanently be deleted!");
+										
+						Optional<ButtonType> result = alert.showAndWait();
+						if (result.get() == ButtonType.OK){
+							try {
+								cardModel.removeCard(card.getUI());
+								updateViewList();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+							}
+						} 
+					}
+				});
+			} catch (Exception e) {
+				//possible null ever listview is empty
+			}
 		
 		// ListView Listener, changes text fields for the selected B.C in ViewList
 		try {
@@ -624,8 +673,10 @@ public class Main extends Application {
 	 * @param card Card which data is to be shown
 	 */
 	protected void setDataFields(UUID id) {
-			try {
+			try {			
 				BusinessCard card = cardModel.getCard(id);
+				
+				//System.out.println("Entered Method: " + card.getCompany().getCompanyName());
 				
 				busLabel.setText(card.getCompany().getCompanyName());
 				
@@ -657,9 +708,11 @@ public class Main extends Application {
 				tfMbe.setText(card.getMisc().getMbeaffiliations());
 				tfLabor.setText(card.getMisc().getLabor());
 				tfServiceA.setText(card.getMisc().getServiceArea());
+				
+				//System.out.println("Exited Method");
 			} catch (IncompleteException e) {
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Warning");
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
 				alert.setHeaderText("EmptyListException | CardNotFoundException");
 				alert.setContentText("There was an error processing your request.");
 				alert.showAndWait();
@@ -671,18 +724,18 @@ public class Main extends Application {
 	 * @param card Card which data is to be updates
 	 */
 	protected void updateCard(UUID id) {
-		Contacts con = new Contacts(tfphNum.getText(),tfExt.getText(),tfFaxNum.getText(),tfWebsite.getText(), tfContactL.getText(),tfEmail.getText());
-		Representative rep = new Representative(tfFName.getText(),tfLName.getText(),tfTitle.getText(),tfMobile.getText());
-		Company comp = new Company(tfComName.getText(),tfStreet.getText(),tfSuitePO.getText(),tfCity.getText(), tfState.getText(),tfZip.getText(), tfCountry.getText(), tfComFunc.getText());
-		CFInfo cf = new CFInfo(tfAEmail.getText(),"",tfSupplier.getText(), tfTrade.getText(), tfUnion.getText(), tfUnlic.getText(), tfWNB.getText());
-		Misc misc = new Misc(tfcsiCode.getText(), tfMbe.getText(),tfLabor.getText(), tfServiceA.getText(), comNotesTA.getText());
+		Contacts con = new Contacts(tfphNum.getText().trim(),tfExt.getText().trim(),tfFaxNum.getText().trim(),tfWebsite.getText().trim(), tfContactL.getText().trim(),tfEmail.getText().trim());
+		Representative rep = new Representative(tfFName.getText().trim(),tfLName.getText().trim(),tfTitle.getText().trim(),tfMobile.getText().trim());
+		Company comp = new Company(tfComName.getText().trim(),tfStreet.getText().trim(),tfSuitePO.getText().trim(),tfCity.getText().trim(), tfState.getText().trim(),tfZip.getText().trim(), tfCountry.getText().trim(), tfComFunc.getText().trim());
+		CFInfo cf = new CFInfo(tfAEmail.getText().trim(),"",tfSupplier.getText().trim(), tfTrade.getText().trim(), tfUnion.getText().trim(), tfUnlic.getText().trim(), tfWNB.getText().trim());
+		Misc misc = new Misc(tfcsiCode.getText().trim(), tfMbe.getText().trim(),tfLabor.getText().trim(), tfServiceA.getText().trim(), comNotesTA.getText().trim());
 		
 		try {
 			cardModel.updateCard(id, con, rep, comp, cf, misc);
 			updateViewList();
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Warning");
+			alert.setTitle("Error");
 			alert.setHeaderText("EmptyListException | CardNotFoundException");
 			alert.setContentText("There was an error processing your request.");
 			alert.showAndWait();
@@ -691,6 +744,7 @@ public class Main extends Application {
 	
 	protected void setFieldsEditable(boolean set){
 		if(set){
+			busLabel.setDisable(false);
 			comNotesTP.setDisable(false);
 			otherTP.setDisable(false);
 			cfTP.setDisable(false);
@@ -700,6 +754,7 @@ public class Main extends Application {
 			comTP.setDisable(false); 
 		}
 		else{
+			busLabel.setDisable(true);
 			comNotesTP.setDisable(true);
 			otherTP.setDisable(true);
 			cfTP.setDisable(true);
@@ -711,8 +766,9 @@ public class Main extends Application {
 	}
 	
 	protected void updateViewList(){
-		observableList = FXCollections.observableList(cardModel.getCards());
-    	listView.setItems(observableList);
+		FXCollections.sort(observableList);
+    	listView.refresh();
+		//listView.setItems(observableList);
 	}
 	
 	

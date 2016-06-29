@@ -2,7 +2,7 @@ package com.dfpray.data;
 
 import java.util.UUID;
 
-public class BusinessCard {
+public class BusinessCard implements Comparable<BusinessCard> {
 	
 	//String to be parsed
 	private String data;
@@ -24,6 +24,16 @@ public class BusinessCard {
 		data = info;
 		processData();
 		id = UUID.randomUUID();
+	}
+	
+	public BusinessCard(){
+		data = " ";
+		id = UUID.randomUUID();
+		contacts = new Contacts();
+		rep = new Representative();
+		company = new Company("*New Company*", " "," "," "," "," "," "," ");
+		cfInfo = new CFInfo();
+		misc = new Misc();		
 	}
 	
 	/**
@@ -227,6 +237,11 @@ public class BusinessCard {
 			}
 		}
 		return -1;
+	}
+	
+	public int compareTo(BusinessCard otherCard){
+		
+		return company.getCompanyName().compareTo(otherCard.getCompany().getCompanyName());
 	}
 
 }
