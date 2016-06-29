@@ -2,7 +2,9 @@ package com.dfpray.formatter;
 
 import java.io.File;
 import java.io.IOException;
-import com.dfpray.data.BusinessCard;
+import java.util.UUID;
+
+import com.dfpray.data.*;
 import com.dfpray.exception.IncompleteException;
 
 import javafx.application.Application;
@@ -57,6 +59,7 @@ public class Main extends Application {
 	TextField tfStreet;
 	TextField tfSuitePO;
 	TextField tfCity;
+	TextField tfZip;
 	TextField tfState;
 	TextField tfCountry;
 	TextField tfComName;
@@ -257,7 +260,7 @@ public class Main extends Application {
 				buttonPane.getChildren().addAll(editBtn);
 							
 				////////////////////////		
-			
+				String labelStyle = "-fx-font: 12 Verdana;";
 			
 		
 				busLabel = new Label("Company Name");
@@ -283,27 +286,32 @@ public class Main extends Application {
 						comGP.setVgap(10);
 					
 						Label lbStreet = new Label("Street Address:");
-						lbStreet.setStyle("-fx-font: 12 Verdana;");
+						lbStreet.setStyle(labelStyle);
 						GridPane.setHalignment(lbStreet, HPos.RIGHT);
 						tfStreet = new TextField();
 							
 						Label lbSuitePO = new Label("Suite/P.O. Box:");
-						lbSuitePO.setStyle("-fx-font: 12 Verdana;");
+						lbSuitePO.setStyle(labelStyle);
 						GridPane.setHalignment(lbSuitePO, HPos.RIGHT);
 						tfSuitePO = new TextField();
 							
 						Label lbCity = new Label("City:");
-						lbCity.setStyle("-fx-font: 12 Verdana;");
+						lbCity.setStyle(labelStyle);
 						GridPane.setHalignment(lbCity, HPos.RIGHT);
 						tfCity = new TextField();
 							
 						Label lbState = new Label("State:");
-						lbState.setStyle("-fx-font: 12 Verdana;");
+						lbState.setStyle(labelStyle);
 						GridPane.setHalignment(lbState, HPos.RIGHT);
 						tfState = new TextField();
-							
+						
+						Label lbZip = new Label("Zip Code:");
+						lbZip.setStyle(labelStyle);
+						GridPane.setHalignment(lbZip, HPos.RIGHT);
+						tfZip = new TextField();
+						
 						Label lbCountry = new Label("Country:");
-						lbCountry.setStyle("-fx-font: 12 Verdana;");
+						lbCountry.setStyle(labelStyle);
 						GridPane.setHalignment(lbCountry, HPos.RIGHT);
 						tfCountry = new TextField();
 				
@@ -311,8 +319,9 @@ public class Main extends Application {
 						comGP.add(lbSuitePO, 0, 1);  comGP.add(tfSuitePO, 1, 1);
 						comGP.add(lbCity, 0, 2);   comGP.add(tfCity, 1, 2);
 						comGP.add(lbState, 2, 0); comGP.add(tfState, 3, 0);
-						comGP.add(lbCountry, 2, 1); comGP.add(tfCountry, 3, 1);
-							
+						comGP.add(lbZip, 2, 1); comGP.add(tfZip, 3, 1);
+						comGP.add(lbCountry, 2, 2); comGP.add(tfCountry, 3, 2);
+						
 						//mandGP.setGridLinesVisible(true);
 						comGP.setPadding(new Insets(10,10,10,10));
 						
@@ -330,27 +339,27 @@ public class Main extends Application {
 						mandGP.setVgap(10);
 						
 						Label lbComName = new Label("Company Name:");
-						lbComName.setStyle("-fx-font: 12 Verdana;");
+						lbComName.setStyle(labelStyle);
 						GridPane.setHalignment(lbComName, HPos.RIGHT);
 						tfComName = new TextField();
 							
 						Label lbFaxNum = new Label("Fax Number:");
-						lbFaxNum.setStyle("-fx-font: 12 Verdana;");
+						lbFaxNum.setStyle(labelStyle);
 						GridPane.setHalignment(lbFaxNum, HPos.RIGHT);
 						tfFaxNum = new TextField();
 							
 						Label lbEmail = new Label("Email Address:");
-						lbEmail.setStyle("-fx-font: 12 Verdana;");
+						lbEmail.setStyle(labelStyle);
 						GridPane.setHalignment(lbEmail, HPos.RIGHT);
 						tfEmail = new TextField();
 							
 						Label lbcsiCode = new Label("CSI Code:");
-						lbcsiCode.setStyle("-fx-font: 12 Verdana;");
+						lbcsiCode.setStyle(labelStyle);
 						GridPane.setHalignment(lbcsiCode, HPos.RIGHT);
 						tfcsiCode = new TextField();
 							
 						Label lbComFunc = new Label("Company Function:");
-						lbComFunc.setStyle("-fx-font: 12 Verdana;");
+						lbComFunc.setStyle(labelStyle);
 						GridPane.setHalignment(lbComFunc, HPos.RIGHT);
 						tfComFunc = new TextField();
 				
@@ -376,22 +385,22 @@ public class Main extends Application {
 						conGP.setVgap(10);
 						
 						Label lbphNum = new Label("Phone Number:");
-						lbphNum.setStyle("-fx-font: 12 Verdana;");
+						lbphNum.setStyle(labelStyle);
 						GridPane.setHalignment(lbphNum, HPos.RIGHT);
 						tfphNum = new TextField();
 							
 						Label lbExt = new Label("Ext:");
-						lbExt.setStyle("-fx-font: 12 Verdana;");
+						lbExt.setStyle(labelStyle);
 						GridPane.setHalignment(lbExt, HPos.RIGHT);
 						tfExt = new TextField();
 							
 						Label lbWebsite = new Label("Website:");
-						lbWebsite.setStyle("-fx-font: 12 Verdana;");
+						lbWebsite.setStyle(labelStyle);
 						GridPane.setHalignment(lbWebsite, HPos.RIGHT);
 						tfWebsite = new TextField();
 							
 						Label lbContactL = new Label("Contact List:");
-						lbContactL.setStyle("-fx-font: 12 Verdana;");
+						lbContactL.setStyle(labelStyle);
 						GridPane.setHalignment(lbContactL, HPos.RIGHT);
 						tfContactL = new TextArea();
 						tfContactL.setMaxSize(250, 75);
@@ -418,22 +427,22 @@ public class Main extends Application {
 					repGP.setPadding(new Insets(10, 10, 10, 32));
 						
 						Label lbFName = new Label("First Name:");
-						lbFName.setStyle("-fx-font: 12 Verdana;");
+						lbFName.setStyle(labelStyle);
 						GridPane.setHalignment(lbFName, HPos.RIGHT);
 						tfFName = new TextField();
 							
 						Label lbLName = new Label("Last Name:");
-						lbLName.setStyle("-fx-font: 12 Verdana;");
+						lbLName.setStyle(labelStyle);
 						GridPane.setHalignment(lbLName, HPos.RIGHT);
 						tfLName = new TextField();
 							
 						Label lbTitle = new Label("Title:");
-						lbTitle.setStyle("-fx-font: 12 Verdana;");
+						lbTitle.setStyle(labelStyle);
 						GridPane.setHalignment(lbTitle, HPos.RIGHT);
 						tfTitle = new TextField();
 							
 						Label lbMobile = new Label("Mobile:");
-						lbMobile.setStyle("-fx-font: 12 Verdana;");
+						lbMobile.setStyle(labelStyle);
 						GridPane.setHalignment(lbMobile, HPos.RIGHT);
 						tfMobile = new TextField();
 							
@@ -456,32 +465,32 @@ public class Main extends Application {
 						cfGP.setVgap(10);
 				
 						Label lbAEmail = new Label("Alt Email:");
-						lbAEmail.setStyle("-fx-font: 12 Verdana;");
+						lbAEmail.setStyle(labelStyle);
 						GridPane.setHalignment(lbAEmail, HPos.RIGHT);
 						tfAEmail = new TextField();
 					
 						Label lbSupplier= new Label("Supplier/Manufacturer:");
-						lbSupplier.setStyle("-fx-font: 12 Verdana;");
+						lbSupplier.setStyle(labelStyle);
 						GridPane.setHalignment(lbSupplier, HPos.RIGHT);
 						tfSupplier = new TextField();
 					
 						Label lbTrade = new Label("Trade:");
-						lbTrade.setStyle("-fx-font: 12 Verdana;");
+						lbTrade.setStyle(labelStyle);
 						GridPane.setHalignment(lbTrade, HPos.RIGHT);
 						tfTrade = new TextField();
 					
 						Label lbUnion = new Label("Union Value:");
-						lbUnion.setStyle("-fx-font: 12 Verdana;");
+						lbUnion.setStyle(labelStyle);
 						GridPane.setHalignment(lbUnion, HPos.RIGHT);
 						tfUnion = new TextField();
 					
 						Label lbUnlic = new Label("Unlicensed States:");
-						lbUnlic.setStyle("-fx-font: 12 Verdana;");
+						lbUnlic.setStyle(labelStyle);
 						GridPane.setHalignment(lbUnlic, HPos.RIGHT);
 						tfUnlic = new TextField();
 						
 						Label lbWNB = new Label("Will Not Bid:");
-						lbWNB.setStyle("-fx-font: 12 Verdana;");
+						lbWNB.setStyle(labelStyle);
 						GridPane.setHalignment(lbWNB, HPos.RIGHT);
 						tfWNB = new TextField();
 		
@@ -509,17 +518,17 @@ public class Main extends Application {
 					otherGP.setVgap(10);
 				
 					Label lbMbe = new Label("MBE Affiliations:");
-					lbMbe.setStyle("-fx-font: 12 Verdana;");
+					lbMbe.setStyle(labelStyle);
 					GridPane.setHalignment(lbMbe, HPos.RIGHT);
 					tfMbe = new TextField();
 					
 					Label lbLabor = new Label("Labor:");
-					lbLabor.setStyle("-fx-font: 12 Verdana;");
+					lbLabor.setStyle(labelStyle);
 					GridPane.setHalignment(lbLabor, HPos.RIGHT);
 					tfLabor = new TextField();
 
 					Label lbServiceA = new Label("Service Area:");
-					lbMbe.setStyle("-fx-font: 12 Verdana;");
+					lbMbe.setStyle(labelStyle);
 					GridPane.setHalignment(lbMbe, HPos.RIGHT);
 					tfServiceA = new TextField();
 					
@@ -623,9 +632,15 @@ public class Main extends Application {
 	 * Updates a cards data to cardModel
 	 * @param card Card which data is to be updates
 	 */
-	protected void updateCard(BusinessCard card) {
+	protected void updateCard(UUID id) {
+		Contacts con = new Contacts(tfphNum.getText(),tfExt.getText(),tfFaxNum.getText(),tfWebsite.getText(), tfContactL.getText(),tfEmail.getText());
+		Representative rep = new Representative(tfFName.getText(),tfLName.getText(),tfTitle.getText(),tfMobile.getText());
+		Company comp = new Company(tfComName.getText(),tfStreet.getText(),tfSuitePO.getText(),tfCity.getText(), tfState.getText(),tfZip.getText(), tfCountry.getText(), tfComFunc.getText());
+		CFInfo cf = new CFInfo(tfAEmail.getText(),"",tfSupplier.getText(), tfTrade.getText(), tfUnion.getText(), tfUnlic.getText(), tfWNB.getText());
+		Misc misc = new Misc(tfcsiCode.getText(), tfMbe.getText(),tfLabor.getText(), tfServiceA.getText(), comNotesTA.getText());
+		
 		try {
-			cardModel.updateCard(card.getUI(), card.getContacts(), card.getRep(), card.getCompany(), card.getCFInfo(), card.getMisc(),card.getInfo());
+			cardModel.updateCard(id, con, rep, comp, cf, misc);
 			updateViewList();
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.WARNING);

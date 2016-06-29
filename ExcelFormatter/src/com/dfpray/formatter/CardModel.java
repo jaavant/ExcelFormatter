@@ -131,12 +131,12 @@ public class CardModel {
 	 * @throws EmptyListException
 	 * @throws CardNotFoundException
 	 */
-	public void updateCard(UUID id, Contacts c, Representative r, Company com, CFInfo cf, Misc m, String info )throws EmptyListException, CardNotFoundException{
+	public void updateCard(UUID id, Contacts c, Representative r, Company com, CFInfo cf, Misc m)throws EmptyListException, CardNotFoundException{
 		if(cards.size() == 0) throw new EmptyListException();		
 				
 		for(BusinessCard card : cards){
 			if(card.getUI().equals(id)){
-				card.updateCard(c, r, com, cf, m, info);
+				card.updateCard(c, r, com, cf, m);
 				return;
 			}
 		}

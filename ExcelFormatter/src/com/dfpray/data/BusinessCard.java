@@ -11,7 +11,6 @@ public class BusinessCard {
     private Company company;
     private CFInfo cfInfo;
     private Misc misc;
-    private String info;
     private UUID id;
 	
 	//Cannot be empty, throw incomplete card exception
@@ -35,11 +34,6 @@ public class BusinessCard {
 		arrayToInfo(i);
 		id = UUID.randomUUID();
 	}
-
-	
-    public String getInfo(){
-    	return this.info;
-    }
     
     public Misc getMisc(){
     	return this.misc;
@@ -70,13 +64,12 @@ public class BusinessCard {
 	 * @param m Misc data
 	 * @param info Info about company
 	 */
-	public void updateCard(Contacts c, Representative r, Company com, CFInfo cf, Misc m, String info){
+	public void updateCard(Contacts c, Representative r, Company com, CFInfo cf, Misc m){
 		contacts = c;
 		rep = r;
 		company = com;
 		cfInfo = cf;
 		misc = m;
-		this.info = info;
 	}
 	
 	
@@ -120,7 +113,8 @@ public class BusinessCard {
 				case 23: rep.setMobilePhone(phrase); break;         //Mobile 
 				case 35: contacts.setEmailAddress(phrase); break;	//email
 				case 36: contacts.setWebsite(phrase); break;		//webpage
-				case 50: this.info = phrase;           break;		//other		
+				case 50: misc.setCompanyNotes(phrase);break;
+				//case 50: this.info = phrase;           break;		//other		
 			}
 			count++;			
 			oldPos = pos + 2;
@@ -162,8 +156,7 @@ public class BusinessCard {
 		cfInfo.setCf_UnionValue(bData[27]);
 		cfInfo.setCf_UnlicensedStates(bData[28]);
 		cfInfo.setCf_WillNotBid(bData[29]);
-		info = bData[30];
-		data = bData[31];
+		data = bData[30];
 	}
 	
 	/**
@@ -193,7 +186,7 @@ public class BusinessCard {
 		bData[18] = misc.getMbeaffiliations();
 		bData[19] = misc.getLabor();
 		bData[20] =	misc.getServiceArea();														
-		bData[21] = info; //should i use info for company notes?
+		bData[21] = misc.getCompanyNotes(); //should i use info for company notes?
 		bData[22] = contacts.getContactLists();
 		bData[23] = cfInfo.getCf_AltEmail();
 		bData[24] = cfInfo.getCf_DNU();
@@ -202,8 +195,7 @@ public class BusinessCard {
 		bData[27] = cfInfo.getCf_UnionValue();
 		bData[28] = cfInfo.getCf_UnlicensedStates();
 		bData[29] =	cfInfo.getCf_WillNotBid();
-		bData[30] = info;
-		bData[31] = data;
+		bData[30] = data;
 		return bData;
 	}
 	
