@@ -126,8 +126,7 @@ public class Main extends Application {
         		    }
         		});
         		
-<<<<<<< HEAD
-        		
+
         		//Open file and fill viewlist 
         		openMI.setOnAction(new EventHandler<ActionEvent>(){
 					public void handle(ActionEvent e) {
@@ -151,8 +150,7 @@ public class Main extends Application {
 	                    }
 					}      			
         		});    		
-=======
->>>>>>> origin/master
+
         		
         		//Open file and fill viewlist 
         		openMI.setOnAction(new EventHandler<ActionEvent>(){
