@@ -182,18 +182,15 @@ public class Main extends Application {
 					}      			
         		});    		
         		
- //       		//List view listener, changes the data fields according to the selected company
- //       		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>(){
- //       			@Override
- //       			public void changed(ObservableValue<? extends BusinessCard> observable, BusinessCard oldValue, BusinessCard newValue){
- //       				try {
-//							setDataFields(cardModel.getCard(newValue.getUI()));
-//						} catch (IncompleteException e) {
-//							e.printStackTrace();					
-//						}
-//       			}
-//      		});
-       		
+        		// ListView Listener, changes text fields for the selected B.C in ViewLsit
+        		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
+					@Override
+					public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
+						setDataFields(newVal.getUI());
+						
+					}
+        		});
+      		
         		
         		
         	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, exportMI,exitMI);
@@ -585,47 +582,47 @@ public class Main extends Application {
 	 * Changes the 
 	 * @param card Card which data is to be shown
 	 */
-	protected void setDataFields(BusinessCard card) {
+	protected void setDataFields(UUID id) {
 			try {
-				card = cardModel.getCard(card.getUI());
+				BusinessCard card = cardModel.getCard(id);
+				
+				busLabel.setText(card.getCompany().getCompanyName());
+				
+				comNotesTA.setText(card.getMisc().getCompanyNotes());
+				tfStreet.setText(card.getCompany().getStreetAdd());
+				tfSuitePO.setText(card.getCompany().getStreetAdd());
+				tfCity.setText(card.getCompany().getStreetAdd());
+				tfState.setText(card.getCompany().getState());
+				tfCountry.setText(card.getCompany().getCountry());
+				tfComName.setText(card.getCompany().getCompanyName());
+				tfFaxNum.setText(card.getContacts().getFaxNumber());
+				tfEmail.setText(card.getContacts().getEmailAddress());
+				tfcsiCode.setText(card.getMisc().getCsiCodes());
+				tfComFunc.setText(card.getCompany().getCompanyFunction());
+				tfphNum.setText(card.getContacts().getPhoneNum());
+				tfExt.setText(card.getContacts().getExt());
+				tfWebsite.setText(card.getContacts().getEmailAddress());
+				tfContactL.setText(card.getContacts().getContactLists());
+				tfFName.setText(card.getRep().getContactFirstName());
+				tfLName.setText(card.getRep().getContactLastName());
+				tfTitle.setText(card.getRep().getTitle());
+				tfMobile.setText(card.getRep().getMobilePhone());
+				tfAEmail.setText(card.getCFInfo().getCf_AltEmail());
+				tfSupplier.setText(card.getCFInfo().getCf_SupplierManf());
+				tfTrade.setText(card.getCFInfo().getCf_Trade());
+				tfUnion.setText(card.getCFInfo().getCf_UnionValue());
+				tfUnlic.setText(card.getCFInfo().getCf_UnlicensedStates());
+				tfWNB.setText(card.getCFInfo().getCf_WillNotBid());
+				tfMbe.setText(card.getMisc().getMbeaffiliations());
+				tfLabor.setText(card.getMisc().getLabor());
+				tfServiceA.setText(card.getMisc().getServiceArea());
 			} catch (IncompleteException e) {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("Warning");
 				alert.setHeaderText("EmptyListException | CardNotFoundException");
 				alert.setContentText("There was an error processing your request.");
 				alert.showAndWait();
-			}
-		
-			busLabel.setText(card.getCompany().getCompanyName());
-			
-			comNotesTA.setText(card.getMisc().getCompanyNotes());
-			tfStreet.setText(card.getCompany().getStreetAdd());
-			tfSuitePO.setText(card.getCompany().getStreetAdd());
-			tfCity.setText(card.getCompany().getStreetAdd());
-			tfState.setText(card.getCompany().getState());
-			tfCountry.setText(card.getCompany().getCountry());
-			tfComName.setText(card.getCompany().getCompanyName());
-			tfFaxNum.setText(card.getContacts().getFaxNumber());
-			tfEmail.setText(card.getContacts().getEmailAddress());
-			tfcsiCode.setText(card.getMisc().getCsiCodes());
-			tfComFunc.setText(card.getCompany().getCompanyFunction());
-			tfphNum.setText(card.getContacts().getPhoneNum());
-			tfExt.setText(card.getContacts().getExt());
-			tfWebsite.setText(card.getContacts().getEmailAddress());
-			tfContactL.setText(card.getContacts().getContactLists());
-			tfFName.setText(card.getRep().getContactFirstName());
-			tfLName.setText(card.getRep().getContactLastName());
-			tfTitle.setText(card.getRep().getTitle());
-			tfMobile.setText(card.getRep().getMobilePhone());
-			tfAEmail.setText(card.getCFInfo().getCf_AltEmail());
-			tfSupplier.setText(card.getCFInfo().getCf_SupplierManf());
-			tfTrade.setText(card.getCFInfo().getCf_Trade());
-			tfUnion.setText(card.getCFInfo().getCf_UnionValue());
-			tfUnlic.setText(card.getCFInfo().getCf_UnlicensedStates());
-			tfWNB.setText(card.getCFInfo().getCf_WillNotBid());
-			tfMbe.setText(card.getMisc().getMbeaffiliations());
-			tfLabor.setText(card.getMisc().getLabor());
-			tfServiceA.setText(card.getMisc().getServiceArea());
+			}	
 	}
 	
 	/**
