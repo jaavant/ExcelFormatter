@@ -580,7 +580,7 @@ public class Main extends Application {
 					//Say all contacts without mandatory info filled will not be exported
 					Alert exportAlert = new Alert(AlertType.CONFIRMATION);
 					exportAlert.setTitle("Export To Excel");
-					
+
 					if(mandCount == 0){
 						exportAlert = new Alert(AlertType.WARNING);
 						exportAlert.setTitle("Export To Excel");

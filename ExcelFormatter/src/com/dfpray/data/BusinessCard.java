@@ -12,6 +12,7 @@ public class BusinessCard implements Comparable<BusinessCard> {
     private CFInfo cfInfo;
     private Misc misc;
     private UUID id;
+    private boolean exported;
 	
 	//Cannot be empty, throw incomplete card exception
 	// private String companyName, faxNumber , emailAddress, csiCodes, companyFunction;		             
@@ -22,6 +23,7 @@ public class BusinessCard implements Comparable<BusinessCard> {
 	 */
 	public BusinessCard(String info) {
 		data = info;
+		exported = false;
 		processData();
 		id = UUID.randomUUID();
 	}
@@ -33,7 +35,8 @@ public class BusinessCard implements Comparable<BusinessCard> {
 		rep = new Representative();
 		company = new Company("*New Company*", " "," "," "," "," "," "," ");
 		cfInfo = new CFInfo();
-		misc = new Misc();		
+		misc = new Misc();
+		exported = false;
 	}
 	
 	/**
@@ -43,6 +46,7 @@ public class BusinessCard implements Comparable<BusinessCard> {
 	public BusinessCard(String[] i) {
 		arrayToInfo(i);
 		id = UUID.randomUUID();
+		exported = false;
 	}
     
     public Misc getMisc(){
@@ -257,6 +261,9 @@ public class BusinessCard implements Comparable<BusinessCard> {
 		return false;
 	}
 	
+	public void setExported(boolean exported){
+		this.exported = exported;
+	}
 	
 	public int compareTo(BusinessCard otherCard){
 		return company.getCompanyName().compareTo(otherCard.getCompany().getCompanyName());
