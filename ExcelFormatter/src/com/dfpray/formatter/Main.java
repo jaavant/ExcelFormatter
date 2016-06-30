@@ -553,8 +553,9 @@ public class Main extends Application {
 
 						alert.showAndWait();
 					}
-
-    		    	observableList = FXCollections.observableList(cardModel.getCards());
+                	
+          
+    		    	observableList.addAll(cardModel.getCards());
     		    	listView.setItems(observableList);
     		    	
                 }
@@ -618,26 +619,25 @@ public class Main extends Application {
 					}
 					//Editing a current contact
 					else{
-						try {
-							BusinessCard card = listView.getSelectionModel().getSelectedItem(); // DEBUG System.out.println(id.toString());	
+						
+							BusinessCard card = listView.getSelectionModel().getSelectedItem(); 
+							if(card == null){
+								return;
+							}
 							updateCard(card.getUI());
-							//System.out.println("Done Editing: " + card.toString());
-
-							listView.refresh();
-							
-							listView.setItems(observableList);
 							busLabel.setText(tfComName.getText().trim());
-						} catch (NullPointerException e) {
-							//Nothing is there
-						}
-						finally{
+							
 							searchTF.setDisable(false);
 							listView.setDisable(false);
 							setFieldsEditable(false);
+							
+							FXCollections.sort(observableList);
 							listView.setItems(observableList);
+							listView.refresh();
+							
 							editBtn.setText(" Edit ");
 							editBtn.setStyle("-fx-base: #e6f3ff");
-						}
+						
 					}
 					
 					editing = !editing;
@@ -651,6 +651,7 @@ public class Main extends Application {
 
 					observableList.add(card);
 
+					FXCollections.sort(observableList);
 					listView.setItems(observableList);
 					listView.refresh();
 
@@ -850,7 +851,7 @@ public class Main extends Application {
 	      }
 	      subentries.add(card);
 	    }
-	  //  FXCollections.sort(subentries);
+	    FXCollections.sort(subentries);
 	    listView.setItems(subentries);
 	   
 	    //effect to select first thing in list
