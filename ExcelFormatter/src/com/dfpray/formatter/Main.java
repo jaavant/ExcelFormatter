@@ -682,12 +682,8 @@ public class Main extends Application {
 			listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
 				@Override
 				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-					int index = listView.getSelectionModel().getSelectedIndex();
-					
-					if(index == -1) return;				
-					
-					BusinessCard card = observableList.get(index);  					
-					setDataFields(card);		 //682
+					if(newVal == null) return; 					
+					setDataFields(newVal);		 
 				}
 			});
 		} catch (NullPointerException e1) {
