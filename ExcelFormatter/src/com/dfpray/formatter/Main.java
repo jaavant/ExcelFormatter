@@ -634,7 +634,6 @@ public class Main extends Application {
 							searchTF.setDisable(false);
 							listView.setDisable(false);
 							setFieldsEditable(false);
-							//updateViewList();
 							listView.setItems(observableList);
 							editBtn.setText(" Edit ");
 							editBtn.setStyle("-fx-base: #e6f3ff");
@@ -852,6 +851,12 @@ public class Main extends Application {
 	      subentries.add(card);
 	    }
 	    listView.setItems(subentries);
+	   
+	    //effect to select first thing in list
+	    if(subentries.size() != 0){
+	    	listView.getSelectionModel().select(0);
+	    	listView.scrollTo(0);
+	    }
 	  }
 	
 	/**
