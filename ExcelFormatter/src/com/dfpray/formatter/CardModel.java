@@ -33,9 +33,19 @@ public class CardModel {
 		cards = new ArrayList<BusinessCard>();
 	}
 	
+	
 	public void addCards(String path) throws IncompleteException, IOException{
 		this.cards.addAll(parseRAWCards(path));
 		checkCollision();
+	}
+	
+	/**
+	 * Sets the arraylist of cards to a new arraylist
+	 * @param cards
+	 */
+	public void setCards(ArrayList<BusinessCard> cards){
+		this.cards.clear();
+		this.cards.addAll(cards);
 	}
 	
 	/** Creates an ArrayList of B.C from a text file

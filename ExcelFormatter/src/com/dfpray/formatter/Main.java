@@ -577,6 +577,14 @@ public class Main extends Application {
 			public void handle(ActionEvent e){
 				File file = fileChooser.showSaveDialog(stage);				
 				String path = file.getAbsolutePath();		
+				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
+				
+				//add cards for observablelsit to an arrayList
+				for(BusinessCard card : observableList){
+					ACards.add(card);
+				}
+				//Set cardModels AList to new list
+				cardModel.setCards(ACards);
 				
 				if(file != null){
 					try {
@@ -687,7 +695,7 @@ public class Main extends Application {
 				}
 			});
 		} catch (NullPointerException e1) {
-			// Do nothing
+			// Null pointer thrown when list is empty
 		}
 		
 	}
