@@ -107,13 +107,8 @@ public class CardModel {
 	 * @throws IncompleteException 
 	 */
 	public void addCard(BusinessCard card) throws IncompleteException{
-		
-		System.out.println("Trying to add card...");
-		
 		cards.add(card);
 		checkCollision();
-		
-		System.out.println("Added Card.");
 	}
 	
 	
@@ -124,9 +119,6 @@ public class CardModel {
 	 * @throws CardNotFoundException 
 	 */
 	public void removeCard(UUID id) throws EmptyListException, CardNotFoundException{
-		
-		System.out.println("trying to remove card...");
-		
 		if(cards.size() == 0) throw new EmptyListException();
 		
 		for(BusinessCard card: cards){
@@ -135,8 +127,6 @@ public class CardModel {
 				return;
 			}
 		}
-		
-		System.out.println("Couldn't find card...");
 		throw new CardNotFoundException();
 	}
 	
@@ -276,7 +266,8 @@ public class CardModel {
 	    			cell.setCellValue(cardInfo);
 	    		}
 	    		
-	    	}	    	  	    	  
+	    	}
+	    	card.setExported(true);
 	    }
 	      	      
 	    //Create file system using specific name

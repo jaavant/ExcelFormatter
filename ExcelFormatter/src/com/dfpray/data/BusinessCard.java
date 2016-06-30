@@ -248,11 +248,11 @@ public class BusinessCard implements Comparable<BusinessCard> {
 	 * @return Boolean indicating whether it has mandatory information
 	 */
 	public boolean hasMand(){
-		if(company.getCompanyName().trim().length() > 0){
-			if(contacts.getFaxNumber().trim().length() > 6)
-				if(contacts.getEmailAddress().contains("@")){
-					if(misc.getCsiCodes().trim().length() > 0){
-						if(company.getCompanyFunction().trim().length() > 0){
+		if(company.getCompanyName().trim().length() > 0){                      
+			if(contacts.getFaxNumber().trim().length() > 6)						
+				if(contacts.getEmailAddress().indexOf('@') >= 0){				
+					if(misc.getCsiCodes().trim().length() > 0){					
+						if(company.getCompanyFunction().trim().length() > 0){   
 							return true;
 						}
 					}
@@ -263,6 +263,10 @@ public class BusinessCard implements Comparable<BusinessCard> {
 	
 	public void setExported(boolean exported){
 		this.exported = exported;
+	}
+	
+	public boolean wasExported(){
+		return exported;
 	}
 	
 	public int compareTo(BusinessCard otherCard){

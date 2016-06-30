@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -534,6 +535,8 @@ public class Main extends Application {
 		//Open file and fill viewlist 
 		openMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
+				fileChooser.getExtensionFilters().clear();
+				
 				File file = fileChooser.showOpenDialog(stage);
 							
 				Alert alert = new Alert(AlertType.ERROR);
@@ -566,40 +569,71 @@ public class Main extends Application {
 		//Export to excel 
 		exportMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e){
-				int mandCount = 0;
+				int noMand = 0;
+				int exported = 0;
 				String path;
 
 				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
+				ArrayList<BusinessCard> ECards = new ArrayList<BusinessCard>();
 				//add cards for observable list to an arrayList
 				for(BusinessCard card : observableList){
-					if(card.hasMand()) ACards.add(card);
-					else mandCount++;
-				}
-				
-				if (mandCount >= 0) {
-					//Say all contacts without mandatory info filled will not be exported
-					Alert exportAlert = new Alert(AlertType.CONFIRMATION);
-					exportAlert.setTitle("Export To Excel");
-
-					if(mandCount == 0){
-						exportAlert = new Alert(AlertType.WARNING);
-						exportAlert.setTitle("Export To Excel");
-						exportAlert.setHeaderText("There are no Contacts to export!");
-						exportAlert.showAndWait();
-						return;
+					if(card.wasExported()){
+						ECards.add(card);
+						exported++;		
+					}									
+					else if(card.hasMand()){
+						ACards.add(card);
 					}
-					else{
-						//If there is contacts with out mand info filled
-						exportAlert.setHeaderText(mandCount
-								+ " Contact(s) does not have the mandatory infomation filled out!");
-						exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");				
-					}	
+					else noMand++;
+				}
+						
+				Alert exportAlert = new Alert(AlertType.CONFIRMATION);
+				exportAlert.setTitle("Export To Excel");
+
+				//Dialog for No contacts to export
+				if(observableList.size() == 0){
+					exportAlert = new Alert(AlertType.WARNING);
+					exportAlert.setTitle("Export To Excel");
+					exportAlert.setHeaderText("There are no Contacts to export!");
+					exportAlert.showAndWait();
+					return;
+				}
+				//Say all contacts without mandatory info filled will not be exported
+				else if(noMand > 0){
+					exportAlert.setHeaderText(noMand	+ " Contact(s) does not have the mandatory infomation filled out!");
+					exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");							
 					//Show Dialog
 					Optional<ButtonType> result = exportAlert.showAndWait();
-					if (result.get() != ButtonType.OK) {
+					if(result.get() != ButtonType.OK) {
 						return;
 					} 
 				}
+				//Dialog for exported contacts, trying to export
+				if(exported > 0){
+					exportAlert.setTitle("Export To Excel");
+					exportAlert.setHeaderText(exported	+ " Contact(s) have already been exported!");
+					exportAlert.setContentText("Choose your option.");
+					
+					ButtonType allBtn = new ButtonType("Export All");
+					ButtonType nonBtn = new ButtonType("Non-Exported Only");
+					ButtonType canclBtn = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+					
+					exportAlert.getButtonTypes().setAll(allBtn, nonBtn, canclBtn);
+					Optional<ButtonType> result = exportAlert.showAndWait();
+					
+					//Do something based on btn choice
+					if(result.get() == allBtn){
+						ACards.addAll(ECards);
+						
+					}
+					else if(result.get() == nonBtn){
+						//do nothing
+					}
+					else{
+						return;
+					}
+				}
+				
 				//Setup up filter so file saves as .xlsx
 				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX files (*.xlsx)", "*.xlsx");
 	            fileChooser.getExtensionFilters().add(extFilter);
@@ -620,6 +654,7 @@ public class Main extends Application {
 							else{
 								cardModel.exportToExcel(path + ".xlsx");
 							}
+							
 					} catch (IOException e1) {
 						Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Error");
@@ -812,7 +847,7 @@ public class Main extends Application {
 			cardNotFound();
 		}
 				
-		Contacts con = new Contacts(tfphNum.getText().trim(),tfExt.getText().trim(),tfFaxNum.getText().trim(),tfWebsite.getText().trim(), tfContactL.getText().trim(),tfEmail.getText().trim());
+		Contacts con = new Contacts(tfphNum.getText().trim(),tfExt.getText().trim(),tfWebsite.getText().trim(), tfContactL.getText().trim(),tfEmail.getText().trim(),tfFaxNum.getText().trim());
 		Representative rep = new Representative(tfFName.getText().trim(),tfLName.getText().trim(),tfTitle.getText().trim(),tfMobile.getText().trim());
 		Company comp = new Company(tfComName.getText().trim(),tfStreet.getText().trim(),tfSuitePO.getText().trim(),tfCity.getText().trim(), tfState.getText().trim(),tfZip.getText().trim(), tfCountry.getText().trim(), tfComFunc.getText().trim());
 		CFInfo cf = new CFInfo(tfAEmail.getText().trim(),"",tfSupplier.getText().trim(), tfTrade.getText().trim(), tfUnion.getText().trim(), tfUnlic.getText().trim(), tfWNB.getText().trim());
