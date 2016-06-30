@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
+
 import com.dfpray.data.*;
 import com.dfpray.exception.IncompleteException;
 
@@ -613,8 +615,8 @@ public class Main extends Application {
 					else{
 						try {
 							BusinessCard card = listView.getSelectionModel().getSelectedItem(); // DEBUG System.out.println(id.toString());	
-							updateCard(card);
-							System.out.println("Done Editing: " + card.toString());
+							updateCard(card.getUI());
+							//System.out.println("Done Editing: " + card.toString());
 
 							listView.refresh();
 							
@@ -683,7 +685,7 @@ public class Main extends Application {
 				@Override
 				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
 					if(newVal == null) return; 					
-					setDataFields(newVal);		 
+					setDataFields(newVal.getUI());		 
 				}
 			});
 		} catch (NullPointerException e1) {
@@ -711,15 +713,16 @@ public class Main extends Application {
 	 * Changes the 
 	 * @param card Card which data is to be shown
 	 */
-	protected void setDataFields(BusinessCard card) {
+	protected void setDataFields(UUID id) {
 	                        //= cardModel.getCard(id);
+				BusinessCard card = null;
+			
+				for(BusinessCard TCard : observableList){
+					if(TCard.getUI().equals(id)) card = TCard; 					
+				}
 
 				if(card == null){
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error");
-					alert.setHeaderText("EmptyListException | CardNotFoundException");
-					alert.setContentText("There was an error processing your request %1.");
-					alert.showAndWait();
+					cardNotFound();
 				}
 				
 				//System.out.println("Entered Method: " + card.getCompany().getCompanyName());
@@ -759,11 +762,22 @@ public class Main extends Application {
 			
 	}
 	
+
 	/**
 	 * Updates a cards data to cardModel
 	 * @param card Card which data is to be updates
 	 */
-	protected void updateCard(BusinessCard card) {
+	protected void updateCard(UUID id) {
+		BusinessCard card = null;
+		
+		for(BusinessCard TCard : observableList){
+			if(TCard.getUI().equals(id)) card = TCard; 					
+		}
+
+		if(card == null){
+			cardNotFound();
+		}
+				
 		Contacts con = new Contacts(tfphNum.getText().trim(),tfExt.getText().trim(),tfFaxNum.getText().trim(),tfWebsite.getText().trim(), tfContactL.getText().trim(),tfEmail.getText().trim());
 		Representative rep = new Representative(tfFName.getText().trim(),tfLName.getText().trim(),tfTitle.getText().trim(),tfMobile.getText().trim());
 		Company comp = new Company(tfComName.getText().trim(),tfStreet.getText().trim(),tfSuitePO.getText().trim(),tfCity.getText().trim(), tfState.getText().trim(),tfZip.getText().trim(), tfCountry.getText().trim(), tfComFunc.getText().trim());
@@ -824,7 +838,7 @@ public class Main extends Application {
 	    
 	    for (BusinessCard card : listView.getItems()) {
 	      String entryText = card.getCompany().getCompanyName().toUpperCase();
-	      System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
+	      //System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
 	      
 	      if (!entryText.contains(value)){
 	        continue;
@@ -834,6 +848,16 @@ public class Main extends Application {
 	    listView.setItems(subentries);
 	  }
 	
+	/**
+	 * Shows A dialog if card could not be found
+	 */
+	private void cardNotFound() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("EmptyListException | CardNotFoundException");
+		alert.setContentText("There was an error processing your request %1.");
+		alert.showAndWait();
+	}
 
 //	protected void updateViewList(){
 //		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
