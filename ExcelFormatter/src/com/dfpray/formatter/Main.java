@@ -556,6 +556,7 @@ public class Main extends Application {
                 	
           
     		    	observableList.addAll(cardModel.getCards());
+    		    	FXCollections.sort(observableList);
     		    	listView.setItems(observableList);
     		    	
                 }
@@ -851,7 +852,6 @@ public class Main extends Application {
 	      }
 	      subentries.add(card);
 	    }
-	    FXCollections.sort(subentries);
 	    listView.setItems(subentries);
 	   
 	    //effect to select first thing in list
