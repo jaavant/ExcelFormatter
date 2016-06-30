@@ -337,6 +337,7 @@ public class CardModel {
 		
 		System.out.println("Searching for card...");
 		for(BusinessCard card : cards){
+			System.out.println("Comparing");
 			if(card.getUI().equals(id))    System.out.println("Found Card"); return card;
 		}
 		System.out.println("Card  not found");

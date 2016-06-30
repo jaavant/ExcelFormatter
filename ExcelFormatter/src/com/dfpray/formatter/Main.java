@@ -2,6 +2,7 @@ package com.dfpray.formatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -161,7 +162,7 @@ public class Main extends Application {
 		   
 		    	listView = new ListView<BusinessCard>();
 		    	listView.setStyle("-fx-font: 14 Verdana;");
-		    	observableList = FXCollections.observableList(cardModel.getCards());
+		    	observableList = FXCollections.observableArrayList();
 		    	listView.setItems(observableList);
 				listView.setMinHeight(700); 
 				listView.setMaxWidth(250);
@@ -521,6 +522,8 @@ public class Main extends Application {
 		
 		
 		//Event Handlers///////
+		
+		//exit
 		exitMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
 				System.exit(0);
@@ -535,7 +538,7 @@ public class Main extends Application {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
 				
-				//TODO if observableList is not empty
+				
 				
                 if (file != null) {
                 	try {
@@ -549,8 +552,20 @@ public class Main extends Application {
 
 						alert.showAndWait();
 					}
-             	                    	                    	
-    		    	observableList = FXCollections.observableList(cardModel.getCards());
+             	     
+                	//observableList.addAll(cardModel.getCards());
+                	
+                	ArrayList<BusinessCard> list = cardModel.getCards();
+
+
+                	for(BusinessCard card : observableList){
+                		list.add(card);
+                	}
+                	
+    		    	observableList = FXCollections.observableList(list);
+    		    	
+    		
+    		    	//TODO if observableList is not empty
     		    	listView.setItems(observableList);
     		    	
                 }
@@ -587,16 +602,19 @@ public class Main extends Application {
 				public void handle(ActionEvent arg0) {
 					if(observableList.isEmpty()) return; //so user can't edit a non existent page
 					if(!editing){
-						listView.setDisable(true);
 						setFieldsEditable(true);
 						editBtn.setText("Done");
 						editBtn.setStyle("-fx-base: #ccffdd");
 					}
 					else{
 						try {
-							UUID id = listView.getSelectionModel().getSelectedItem().getUI(); // DEBUG System.out.println(id.toString());	
-							updateCard(id);
-							updateViewList();
+							BusinessCard card = listView.getSelectionModel().getSelectedItem(); // DEBUG System.out.println(id.toString());	
+							updateCard(card);
+							System.out.println("Done Editing: " + card.toString());
+
+							listView.refresh();
+							
+							listView.setItems(observableList);
 							busLabel.setText(tfComName.getText().trim());
 						} catch (NullPointerException e) {
 							//Nothing is there
@@ -604,7 +622,8 @@ public class Main extends Application {
 						finally{
 							listView.setDisable(false);
 							setFieldsEditable(false);
-							updateViewList();
+							//updateViewList();
+							listView.setItems(observableList);
 							editBtn.setText(" Edit ");
 							editBtn.setStyle("-fx-base: #e6f3ff");
 						}
@@ -614,18 +633,18 @@ public class Main extends Application {
 				}
     		});
     		
-    	//Adds an account to the ViewList and sorts it
+    	//Adds an account to the ViewList
     		addAccBtn.setOnAction(new EventHandler<ActionEvent>(){
     			public void handle(ActionEvent arg0){
     				BusinessCard card = new BusinessCard();
-    				try {
-						cardModel.addCard(card);
-						updateViewList();
-						listView.getSelectionModel().select(card);
-						listView.scrollTo(card);
-					} catch (IncompleteException e) {
-						// TODO collision between UI.. which would be a 1 and very high chance.. fix sometime
-					}	
+
+					observableList.add(card);
+
+					listView.setItems(observableList);
+					listView.refresh();
+
+					listView.getSelectionModel().select(card);
+					listView.scrollTo(card);	
     				
     			}
     		});
@@ -636,8 +655,6 @@ public class Main extends Application {
 					public void handle(ActionEvent arg0){
 						if(observableList.isEmpty()) return; //cant delete nothing
 						
-						System.out.println("ActionLisener: trying to reomve card");
-						
 						BusinessCard card  = listView.getSelectionModel().getSelectedItem();
 						
 						Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -647,19 +664,13 @@ public class Main extends Application {
 										
 						Optional<ButtonType> result = alert.showAndWait();
 						if (result.get() == ButtonType.OK){
-							try {
-								cardModel.removeCard(card.getUI());
-								updateViewList();
-							} catch (Exception e) {
-								//Card doesnt exist..
-							}
+							observableList.remove((Object)card); //668
+							listView.setItems(observableList);					
 						}
-						
-						System.out.println("Leaving ActionListener:.");
 					}
 				});
 			} catch (Exception e) {
-				//possible null ever listview is empty
+				//possible null if listview is empty
 			}
 		
 		// ListView Listener, changes text fields for the selected B.C in ViewList
@@ -667,7 +678,12 @@ public class Main extends Application {
 			listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
 				@Override
 				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-					setDataFields(newVal.getUI());		
+					int index = listView.getSelectionModel().getSelectedIndex();
+					
+					if(index == -1) return;				
+					
+					BusinessCard card = observableList.get(index);  					
+					setDataFields(card);		 //682
 				}
 			});
 		} catch (NullPointerException e1) {
@@ -680,9 +696,16 @@ public class Main extends Application {
 	 * Changes the 
 	 * @param card Card which data is to be shown
 	 */
-	protected void setDataFields(UUID id) {
-			try {			
-				BusinessCard card = cardModel.getCard(id);
+	protected void setDataFields(BusinessCard card) {
+	                        //= cardModel.getCard(id);
+
+				if(card == null){
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("EmptyListException | CardNotFoundException");
+					alert.setContentText("There was an error processing your request %1.");
+					alert.showAndWait();
+				}
 				
 				//System.out.println("Entered Method: " + card.getCompany().getCompanyName());
 				
@@ -718,20 +741,14 @@ public class Main extends Application {
 				tfServiceA.setText(card.getMisc().getServiceArea());
 				
 				//System.out.println("Exited Method");
-			} catch (IncompleteException e) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setHeaderText("EmptyListException | CardNotFoundException");
-				alert.setContentText("There was an error processing your request %1.");
-				alert.showAndWait();
-			}	
+			
 	}
 	
 	/**
 	 * Updates a cards data to cardModel
 	 * @param card Card which data is to be updates
 	 */
-	protected void updateCard(UUID id) {
+	protected void updateCard(BusinessCard card) {
 		Contacts con = new Contacts(tfphNum.getText().trim(),tfExt.getText().trim(),tfFaxNum.getText().trim(),tfWebsite.getText().trim(), tfContactL.getText().trim(),tfEmail.getText().trim());
 		Representative rep = new Representative(tfFName.getText().trim(),tfLName.getText().trim(),tfTitle.getText().trim(),tfMobile.getText().trim());
 		Company comp = new Company(tfComName.getText().trim(),tfStreet.getText().trim(),tfSuitePO.getText().trim(),tfCity.getText().trim(), tfState.getText().trim(),tfZip.getText().trim(), tfCountry.getText().trim(), tfComFunc.getText().trim());
@@ -739,8 +756,10 @@ public class Main extends Application {
 		Misc misc = new Misc(tfcsiCode.getText().trim(), tfMbe.getText().trim(),tfLabor.getText().trim(), tfServiceA.getText().trim(), comNotesTA.getText().trim());
 		
 		try {
-			cardModel.updateCard(id, con, rep, comp, cf, misc);
-			updateViewList();
+			card.updateCard(con, rep, comp, cf, misc);
+			//updateViewList();
+			listView.setItems(observableList);
+
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Error");
@@ -773,14 +792,14 @@ public class Main extends Application {
 		}
 	}
 	
-	protected void updateViewList(){
-		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
-		listView.setItems(observableList);
-		
-		for(BusinessCard card : observableList){
-			System.out.println(card.toString() + " " + card.getUI().toString());
-		}
-	}
+//	protected void updateViewList(){
+//		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
+//		listView.setItems(observableList);
+//		
+//		for(BusinessCard card : observableList){
+//			System.out.println(card.toString() + " " + card.getUI().toString());
+//		}
+//	}
 	
 	
 	
