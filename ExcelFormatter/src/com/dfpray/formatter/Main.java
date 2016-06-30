@@ -566,22 +566,49 @@ public class Main extends Application {
 		//Export to excel 
 		exportMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e){
+				int mandCount = 0;
+				String path;
+
+				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
+				//add cards for observable list to an arrayList
+				for(BusinessCard card : observableList){
+					if(card.hasMand()) ACards.add(card);
+					else mandCount++;
+				}
 				
-				 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX files (*.xlsx)", "*.xlsx");
-	             fileChooser.getExtensionFilters().add(extFilter);
-				
+				if (mandCount >= 0) {
+					//Say all contacts without mandatory info filled will not be exported
+					Alert exportAlert = new Alert(AlertType.CONFIRMATION);
+					exportAlert.setTitle("Export To Excel");
+					
+					if(mandCount == 0){
+						exportAlert = new Alert(AlertType.WARNING);
+						exportAlert.setTitle("Export To Excel");
+						exportAlert.setHeaderText("There are no Contacts to export!");
+						exportAlert.showAndWait();
+						return;
+					}
+					else{
+						//If there is contacts with out mand info filled
+						exportAlert.setHeaderText(mandCount
+								+ " Contact(s) does not have the mandatory infomation filled out!");
+						exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");				
+					}	
+					//Show Dialog
+					Optional<ButtonType> result = exportAlert.showAndWait();
+					if (result.get() != ButtonType.OK) {
+						return;
+					} 
+				}
+				//Setup up filter so file saves as .xlsx
+				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX files (*.xlsx)", "*.xlsx");
+	            fileChooser.getExtensionFilters().add(extFilter);
 				
 				File file = fileChooser.showSaveDialog(stage);				
-				String path = file.getAbsolutePath();
+				if(file == null) return;
+				path = file.getAbsolutePath();
 				
-				if(path == null) return;
 				
-				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
-				
-				//add cards for observablelsit to an arrayList
-				for(BusinessCard card : observableList){
-					ACards.add(card);
-				}
 				//Set cardModels AList to new list
 				cardModel.setCards(ACards);
 				
