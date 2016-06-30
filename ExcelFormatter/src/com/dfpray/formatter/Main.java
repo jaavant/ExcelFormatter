@@ -632,7 +632,6 @@ public class Main extends Application {
 							listView.setDisable(false);
 							setFieldsEditable(false);
 							
-							FXCollections.sort(observableList);
 							listView.setItems(observableList);
 							listView.refresh();
 							
@@ -700,7 +699,7 @@ public class Main extends Application {
 		}
 		
 	
-		//TODO testing search field
+		//search field than searches listview
 		searchTF.textProperty().addListener(new ChangeListener<Object>() {
 		      public void changed(ObservableValue<?> observable, Object oldVal, Object newVal) {
 		        search((String) oldVal, (String) newVal);
@@ -738,8 +737,9 @@ public class Main extends Application {
 				
 				comNotesTA.setText(card.getMisc().getCompanyNotes());
 				tfStreet.setText(card.getCompany().getStreetAdd());
-				tfSuitePO.setText(card.getCompany().getStreetAdd());
-				tfCity.setText(card.getCompany().getStreetAdd());
+				tfSuitePO.setText(card.getCompany().getSuitPOBox());
+				tfZip.setText(card.getCompany().getZipcode());
+				tfCity.setText(card.getCompany().getCity());
 				tfState.setText(card.getCompany().getState());
 				tfCountry.setText(card.getCompany().getCountry());
 				tfComName.setText(card.getCompany().getCompanyName());
@@ -827,13 +827,13 @@ public class Main extends Application {
 			comTP.setDisable(true); 
 		}
 	}
-	//TODO
-	/**
+
+	/** Creates a list determined by the text in the search field
 	 * Testing a search textfield  
 	 * @param oldVal Old string in textfield
 	 * @param newVal New one
 	 */
-	public void search(String oldVal, String newVal) {
+	protected void search(String oldVal, String newVal) {
 		
 		//Check we don't have the same string
 		if (oldVal != null && newVal.length() < oldVal.length()) {
@@ -843,11 +843,8 @@ public class Main extends Application {
 	    String value = newVal.toUpperCase();
 	    ObservableList<BusinessCard> subentries = FXCollections.observableArrayList();
 	    
-	    for (BusinessCard card : listView.getItems()) {
-	      String entryText = card.getCompany().getCompanyName().toUpperCase();
-	      //System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
-	      
-	      if (!entryText.contains(value)){
+	    for (BusinessCard card : listView.getItems()) {      
+	      if (!card.toString().toUpperCase().contains(value)){
 	        continue;
 	      }
 	      subentries.add(card);
@@ -870,19 +867,7 @@ public class Main extends Application {
 		alert.setHeaderText("EmptyListException | CardNotFoundException");
 		alert.setContentText("There was an error processing your request %1.");
 		alert.showAndWait();
-	}
-
-//	protected void updateViewList(){
-//		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
-//		listView.setItems(observableList);
-//		
-//		for(BusinessCard card : observableList){
-//			System.out.println(card.toString() + " " + card.getUI().toString());
-//		}
-//	}
-	
-	
-	
+	}	
 
 }
 

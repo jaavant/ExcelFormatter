@@ -239,8 +239,26 @@ public class BusinessCard implements Comparable<BusinessCard> {
 		return -1;
 	}
 	
+	/**
+	 * Checks if Card has the mandatory information filled out to be exported
+	 * @return Boolean indicating whether it has mandatory information
+	 */
+	public boolean hasMand(){
+		if(company.getCompanyName().trim().length() > 0){
+			if(contacts.getFaxNumber().trim().length() > 6)
+				if(contacts.getEmailAddress().contains("@")){
+					if(misc.getCsiCodes().trim().length() > 0){
+						if(company.getCompanyFunction().trim().length() > 0){
+							return true;
+						}
+					}
+				}
+		}
+		return false;
+	}
+	
+	
 	public int compareTo(BusinessCard otherCard){
-		
 		return company.getCompanyName().compareTo(otherCard.getCompany().getCompanyName());
 	}
 
