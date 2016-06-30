@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -279,8 +281,34 @@ public class CardModel implements Serializable {
 	    out.close();	
 
 	}
-	
 
+	/**
+	 * Serializes and write this to a path
+	 * @param path absolute path where this object will be written
+	 */
+	public static void saveModel(CardModel cm, String path) throws IOException{
+         FileOutputStream fileOut = new FileOutputStream(path);
+	     ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	     out.writeObject(cm);
+	     out.close();
+	     fileOut.close();
+	}
+	
+	/**
+	 * Reads a serialized file of this from a path
+	 * @param path Absolute path of file
+	 */
+	public static CardModel loadModel(String path) throws IOException, ClassNotFoundException{
+		CardModel cm = null;
+	
+		FileInputStream fileIn = new FileInputStream("/tmp/employee.ser");
+		ObjectInputStream in = new ObjectInputStream(fileIn);
+		cm = (CardModel) in.readObject();
+		in.close();
+		fileIn.close();
+		return cm;
+	}
+	
 	/** 
 	 * Get file extension
 	 * @param ext Address to File
