@@ -607,11 +607,16 @@ public class Main extends Application {
     		editBtn.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent arg0) {
 					if(observableList.isEmpty()) return; //so user can't edit a non existent page
+					
+					//not editing contact
 					if(!editing){
+						listView.setDisable(true);
+						searchTF.setDisable(true);
 						setFieldsEditable(true);
 						editBtn.setText("Done");
 						editBtn.setStyle("-fx-base: #ccffdd");
 					}
+					//Editing a current contact
 					else{
 						try {
 							BusinessCard card = listView.getSelectionModel().getSelectedItem(); // DEBUG System.out.println(id.toString());	
@@ -626,6 +631,7 @@ public class Main extends Application {
 							//Nothing is there
 						}
 						finally{
+							searchTF.setDisable(false);
 							listView.setDisable(false);
 							setFieldsEditable(false);
 							//updateViewList();
