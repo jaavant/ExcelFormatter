@@ -43,7 +43,8 @@ public class Main extends Application {
 	FileChooser fileChooser;
 	CardModel cardModel;
 	ObservableList<BusinessCard> observableList;
-	ObservableList<BusinessCard> notSearhedOList = FXCollections.observableArrayList();
+	ObservableList<BusinessCard> observableDupl;
+	ObservableList<BusinessCard> temp;
 	ListView<BusinessCard> listView;
 	
 	Label busLabel;
@@ -107,6 +108,10 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		observableDupl = FXCollections.observableArrayList();
+		temp = FXCollections.observableArrayList();
+		
+		
 		cardModel = new CardModel();
 		editing = false;
 		
@@ -681,13 +686,9 @@ public class Main extends Application {
 		try {
 			listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
 				@Override
-				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-					int index = listView.getSelectionModel().getSelectedIndex();
-					
-					if(index == -1) return;				
-					
-					BusinessCard card = observableList.get(index);  					
-					setDataFields(card);		 //682
+				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {			
+					if(newVal == null) return;	  					
+					setDataFields(newVal);		 
 				}
 			});
 		} catch (NullPointerException e1) {
@@ -698,7 +699,7 @@ public class Main extends Application {
 		//TODO testing search field
 		searchTF.textProperty().addListener(new ChangeListener<Object>() {
 		      public void changed(ObservableValue<?> observable, Object oldVal, Object newVal) {
-		        search((String) oldVal, (String) newVal);
+		       // search((String) oldVal, (String) newVal);
 		      }
 		}
 		);
@@ -816,28 +817,38 @@ public class Main extends Application {
 	 * @param oldVal Old string in textfield
 	 * @param newVal New one
 	 */
-	public void search(String oldVal, String newVal) {
-		
-		//Check we don't have the same string
-		if (oldVal != null && newVal.length() < oldVal.length()) {
-	      listView.setItems(observableList);
-	    }
-	    
-	    String value = newVal.toUpperCase();
-	    ObservableList<BusinessCard> subentries = FXCollections.observableArrayList();
-	    
-	    for (BusinessCard card : listView.getItems()) {
-	      String entryText = card.getCompany().getCompanyName().toUpperCase();
-	      System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
-	      
-	      if (!entryText.contains(value)){
-	        continue;
-	      }
-	      subentries.add(card);
-	    }
-	    listView.setItems(subentries);
-	  }
+//	public void search(String oldVal, String newVal) {
+//	    String value = newVal.toUpperCase();
+//	    ObservableList<BusinessCard> temp = FXCollections.observableArrayList();
+//		
+//		//Check we don't have the same string
+//		if (oldVal != null && newVal.length() < oldVal.length()) {
+//			
+//	    }
+//	    
+//	    for(BusinessCard card : listView.getItems()) {
+//	    	String entryText = card.getCompany().getCompanyName().toUpperCase();
+//	    	System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
+//	      
+//	    	if(!entryText.contains(value)){
+//	    		continue;
+//	    	}
+//	      temp.add(card);
+//	    }
+//	    listView.setItems(observableList);
+//	  }
 	
+//	
+//	protected void addToList(BusinessCard card){
+//		observableList.add(card);
+//		observableDupl.add(card);
+//	}
+//	
+//	protected void delFromList(BusinessCard card){
+//		observableList.remove(card);
+//		observableDupl.remove(card);
+//	}
+
 
 //	protected void updateViewList(){
 //		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
