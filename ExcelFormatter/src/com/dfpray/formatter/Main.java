@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.UUID;
-
 import com.dfpray.data.*;
 import com.dfpray.exception.IncompleteException;
 
@@ -45,6 +43,7 @@ public class Main extends Application {
 	FileChooser fileChooser;
 	CardModel cardModel;
 	ObservableList<BusinessCard> observableList;
+	ObservableList<BusinessCard> notSearhedOList = FXCollections.observableArrayList();
 	ListView<BusinessCard> listView;
 	
 	Label busLabel;
@@ -563,9 +562,6 @@ public class Main extends Application {
                 	}
                 	
     		    	observableList = FXCollections.observableList(list);
-    		    	
-    		
-    		    	//TODO if observableList is not empty
     		    	listView.setItems(observableList);
     		    	
                 }
@@ -698,7 +694,22 @@ public class Main extends Application {
 			// Null pointer thrown when list is empty
 		}
 		
+	
+		//TODO testing search field
+		searchTF.textProperty().addListener(new ChangeListener<Object>() {
+		      public void changed(ObservableValue<?> observable, Object oldVal, Object newVal) {
+		        search((String) oldVal, (String) newVal);
+		      }
+		}
+		);
+		
+	
+	
 	}
+	
+	
+
+
 
 	/**
 	 * Changes the 
@@ -799,7 +810,35 @@ public class Main extends Application {
 			comTP.setDisable(true); 
 		}
 	}
+	//TODO
+	/**
+	 * Testing a search textfield  
+	 * @param oldVal Old string in textfield
+	 * @param newVal New one
+	 */
+	public void search(String oldVal, String newVal) {
+		
+		//Check we don't have the same string
+		if (oldVal != null && newVal.length() < oldVal.length()) {
+	      listView.setItems(observableList);
+	    }
+	    
+	    String value = newVal.toUpperCase();
+	    ObservableList<BusinessCard> subentries = FXCollections.observableArrayList();
+	    
+	    for (BusinessCard card : listView.getItems()) {
+	      String entryText = card.getCompany().getCompanyName().toUpperCase();
+	      System.out.println("Does: " + entryText + ", contain: " + card.toString() + " = " + entryText.contains(value));
+	      
+	      if (!entryText.contains(value)){
+	        continue;
+	      }
+	      subentries.add(card);
+	    }
+	    listView.setItems(subentries);
+	  }
 	
+
 //	protected void updateViewList(){
 //		observableList = observableList.sorted(); //TODO dont change until why NPE is being thrown
 //		listView.setItems(observableList);
