@@ -1,6 +1,12 @@
 package com.dfpray.data;
 
-public class CFInfo {
+import java.io.Serializable;
+
+public class CFInfo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String cf_AltEmail;
 	private String cf_DNU;
 	private String cf_SupplierManf;

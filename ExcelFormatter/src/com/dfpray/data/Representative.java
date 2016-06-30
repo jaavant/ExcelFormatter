@@ -1,6 +1,12 @@
 package com.dfpray.data;
 
-public class Representative {
+import java.io.Serializable;
+
+public class Representative implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String contactFirstName;
 	private String contactLastName;
 	private String title;

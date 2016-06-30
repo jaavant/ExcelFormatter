@@ -1,9 +1,14 @@
 package com.dfpray.data;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class BusinessCard implements Comparable<BusinessCard> {
+public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//String to be parsed
 	private String data;
     private Contacts contacts;

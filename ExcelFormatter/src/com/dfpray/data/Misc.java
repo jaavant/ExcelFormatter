@@ -1,6 +1,12 @@
 package com.dfpray.data;
 
-public class Misc {
+import java.io.Serializable;
+
+public class Misc implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String csiCodes;
 	private String mbeaffiliations;
 	private String labor;

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -19,12 +20,14 @@ import com.dfpray.data.*;
 import com.dfpray.exception.*;
 
 
-public class CardModel {
+public class CardModel implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<BusinessCard> cards;
-		
-		
-	
+
 	/**
 	 * Create a list of BusinessCards from a path to a file
 	 * @param path Path to file

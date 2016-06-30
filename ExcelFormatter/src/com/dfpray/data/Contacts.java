@@ -1,6 +1,12 @@
 package com.dfpray.data;
 
-public class Contacts {
+import java.io.Serializable;
+
+public class Contacts implements Serializable{
+/**
+ * 
+ */
+private static final long serialVersionUID = 1L;
 	private String phoneNum;
 	private String ext;
 	private String faxNumber;
