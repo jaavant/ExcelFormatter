@@ -553,17 +553,8 @@ public class Main extends Application {
 
 						alert.showAndWait();
 					}
-             	     
-                	//observableList.addAll(cardModel.getCards());
-                	
-                	ArrayList<BusinessCard> list = cardModel.getCards();
 
-
-                	for(BusinessCard card : observableList){
-                		list.add(card);
-                	}
-                	
-    		    	observableList = FXCollections.observableList(list);
+    		    	observableList = FXCollections.observableList(cardModel.getCards());
     		    	listView.setItems(observableList);
     		    	
                 }
@@ -573,8 +564,16 @@ public class Main extends Application {
 		//Export to excel 
 		exportMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e){
+				
+				 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX files (*.xlsx)", "*.xlsx");
+	             fileChooser.getExtensionFilters().add(extFilter);
+				
+				
 				File file = fileChooser.showSaveDialog(stage);				
-				String path = file.getAbsolutePath();		
+				String path = file.getAbsolutePath();
+				
+				if(path == null) return;
+				
 				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
 				
 				//add cards for observablelsit to an arrayList
@@ -586,12 +585,12 @@ public class Main extends Application {
 				
 				if(file != null){
 					try {
-						if(path.endsWith(".xlsx")){
-							cardModel.exportToExcel(path);
-						}
-						else{
-							cardModel.exportToExcel(path + ".xlsx");
-						}
+							if(path.endsWith(".xlsx")){
+								cardModel.exportToExcel(path);
+							}
+							else{
+								cardModel.exportToExcel(path + ".xlsx");
+							}
 					} catch (IOException e1) {
 						Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Error");
@@ -599,6 +598,7 @@ public class Main extends Application {
 						alert.setContentText("Oops, there was an error trying to process your command");
 					}
 				}
+				fileChooser.getExtensionFilters().clear();
 				
 			}
 		});
@@ -850,6 +850,7 @@ public class Main extends Application {
 	      }
 	      subentries.add(card);
 	    }
+	  //  FXCollections.sort(subentries);
 	    listView.setItems(subentries);
 	   
 	    //effect to select first thing in list
