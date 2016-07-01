@@ -556,11 +556,6 @@ public class Main extends Application {
 				fileChooser.getExtensionFilters().clear();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
 				
-				if(observableList.isEmpty()){
-					showDialog("Save as","There Is Nothing to Save","",AlertType.WARNING);
-					return;
-				}
-				
 				File file = fileChooser.showSaveDialog(stage);
 				
 				if(file != null){				
@@ -592,10 +587,12 @@ public class Main extends Application {
 								
 				if(CardModel.fileExists(filePath)){
 					path = filePath;
-				}else{
+				}else{			
 					File file = fileChooser.showSaveDialog(stage);
 					if(file != null){
 						path = file.getAbsolutePath();
+					}else{
+						return;
 					}
 				}
 				
@@ -609,9 +606,9 @@ public class Main extends Application {
 					CardModel.saveModel(cardModel, path);
 					filePath = path;
 				} catch (IOException e) {
-					ioDialog();	
+					ioDialog();
 				}
-				
+				fileChooser.getExtensionFilters().clear();
 			}		
 		});
 		
@@ -619,6 +616,7 @@ public class Main extends Application {
 		//open
 		openMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
+				fileChooser.getExtensionFilters().clear();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
 				
 				Alert lostAlert = new Alert(AlertType.CONFIRMATION);
@@ -658,7 +656,8 @@ public class Main extends Application {
 		importMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
 				fileChooser.getExtensionFilters().clear();
-				
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.xlsx"));
+		
 				File file = fileChooser.showOpenDialog(stage);
 
                 if (file != null) {
@@ -704,7 +703,8 @@ public class Main extends Application {
 
 				//Dialog for No contacts to export
 				if(observableList.size() == 0){
-					showDialog("Export To Excel","There are no Contacts to export!","",AlertType.WARNING);
+					showDialog("Export To Excel","There Are No Contacts To Export!","",AlertType.WARNING);
+					return;
 				}
 				//Say all contacts without mandatory info filled will not be exported
 				else if(noMand > 0){

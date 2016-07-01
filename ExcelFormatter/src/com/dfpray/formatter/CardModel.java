@@ -174,11 +174,16 @@ public class CardModel implements Serializable {
 	 * @return Only returns true if the file of that format exists, else it will return false
 	 */
 	public static boolean fileExists(String path){
+		if(path == null){
+			return false;
+		}
+		
 		File f = new File(path);
-		
-		//Check if we are looking at a file 
-		if(!f.isFile()) return false;
-		
+
+		//Check if we are looking at a file 	
+		if(!f.isFile()){
+			return false;
+		}	
 		return f.exists();
 	}
 	
