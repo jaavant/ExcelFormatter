@@ -41,7 +41,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -949,30 +948,36 @@ public class Main extends Application {
 	
 	//Colors circled that indicates status of card on listView
     static class ColorCell extends ListCell<BusinessCard> {
+    	private final Circle manDone = new Circle(3);
+        private final Circle ex = new Circle(3);
+        private final HBox circles = new HBox(4, manDone, ex);
+
+        private static final Color EXPORTED_COLOR = Color.web("#808080");
+        private static final Color MAN_COLOR = Color.web("#ff9999");
+        private static final Color DONE_COLOR = Color.web("#99ff99");
+    	
+        public ColorCell(){
+            setGraphic(circles);
+            // hide circles
+            manDone.setFill(Color.TRANSPARENT);
+            ex.setFill(Color.TRANSPARENT);
+            setTextFill(Color.BLACK);
+        }
+        
         @Override
         public void updateItem(BusinessCard item, boolean empty) {
             super.updateItem(item, empty);
-            
-            Circle circMan = new Circle(0,0,3,Color.web("#ff9999"));
-            Circle circEx = new Circle(10,0,3,Color.web("#808080"));  // old #e1eaea 
-            Circle circDone = new Circle(0,0,3,Color.web("#99ff99")); //old #99ff99    
-             
-             if(item != null){
-            	 setTextFill(Color.BLACK);
-            	 setText(item.toString());
-            	 
-            	 if(item.wasExported() && !item.hasMand()){
-            		 setGraphic(Shape.union(circMan, circEx)); //TODO
-            	 }           	 
-            	 else if(item.wasExported()){
-            		 setGraphic(circEx);
-            	 }            	
-            	 else if(!item.hasMand()){
-            		 setGraphic(circMan);
-            	 }
-            	 else{
-            		 setGraphic(circDone);
-            	 }
+
+            if (item == null) {
+                // hide circles
+                manDone.setFill(Color.TRANSPARENT);
+                ex.setFill(Color.TRANSPARENT);
+                setText(null);
+            } else {
+                setText(item.toString());
+
+                ex.setFill(item.wasExported() ? EXPORTED_COLOR : Color.TRANSPARENT);
+                manDone.setFill(item.hasMand() ? DONE_COLOR : MAN_COLOR);
             }
         }
     }
