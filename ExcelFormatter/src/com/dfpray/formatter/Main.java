@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -38,8 +39,12 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class Main extends Application {
 	
@@ -168,6 +173,14 @@ public class Main extends Application {
 		    	listView.setItems(observableList);
 				listView.setMinHeight(700); 
 				listView.setMaxWidth(250);
+				
+				
+				listView.setCellFactory(new Callback<ListView<BusinessCard>, ListCell<BusinessCard>>(){
+					@Override
+					public ListCell<BusinessCard> call(ListView<BusinessCard> list){
+						return new ColorCell();
+					}
+				});
 		    	
 		    	addAccBtn = new Button(" New Contact  ");
 		    	addAccBtn.setStyle("-fx-font: 19 verdana; -fx-base: #e6f3ff;");   // #b6e7c9;");
@@ -581,7 +594,7 @@ public class Main extends Application {
 						ECards.add(card);
 						exported++;		
 					}									
-					else if(card.hasMand()){
+					if(card.hasMand()){
 						ACards.add(card);
 					}
 					else noMand++;
@@ -664,6 +677,8 @@ public class Main extends Application {
 				}
 				fileChooser.getExtensionFilters().clear();
 				
+				//Make sure colored circle is updated for the card
+				listView.refresh(); 
 			}
 		});
 		
@@ -930,6 +945,37 @@ public class Main extends Application {
 		alert.setContentText("There was an error processing your request %1.");
 		alert.showAndWait();
 	}	
+	
+	
+	//Colors circled that indicates status of card on listView
+    static class ColorCell extends ListCell<BusinessCard> {
+        @Override
+        public void updateItem(BusinessCard item, boolean empty) {
+            super.updateItem(item, empty);
+            
+            Circle circMan = new Circle(0,0,3,Color.web("#ff9999"));
+            Circle circEx = new Circle(10,0,3,Color.web("#808080"));  // old #e1eaea 
+            Circle circDone = new Circle(0,0,3,Color.web("#99ff99")); //old #99ff99    
+             
+             if(item != null){
+            	 setTextFill(Color.BLACK);
+            	 setText(item.toString());
+            	 
+            	 if(item.wasExported() && !item.hasMand()){
+            		 setGraphic(Shape.union(circMan, circEx)); //TODO
+            	 }           	 
+            	 else if(item.wasExported()){
+            		 setGraphic(circEx);
+            	 }            	
+            	 else if(!item.hasMand()){
+            		 setGraphic(circMan);
+            	 }
+            	 else{
+            		 setGraphic(circDone);
+            	 }
+            }
+        }
+    }
 
 }
 

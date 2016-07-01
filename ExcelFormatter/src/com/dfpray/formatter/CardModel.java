@@ -28,6 +28,7 @@ public class CardModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private ArrayList<BusinessCard> cards;
 
 	/**

@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class BusinessCard implements Comparable<BusinessCard>, Serializable {
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	//String to be parsed
 	private String data;
     private Contacts contacts;
@@ -24,7 +24,7 @@ public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 
 	/**
 	 * Constructor for BC, takes in unsanitized info
-	 * @param info String containing BC info with "" delimeters
+	 * @param info String containing BC info with "" delimiters
 	 */
 	public BusinessCard(String info) {
 		data = info;
