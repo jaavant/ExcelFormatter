@@ -171,13 +171,13 @@ public class CardModel implements Serializable {
 	/**
 	 * Checks if a file already exists
 	 * @param path Path to file
-	 * @return 
+	 * @return Only returns true if the file of that format exists, else it will return false
 	 */
-	public boolean fileExists(String path) throws IncompleteException{
+	public static boolean fileExists(String path){
 		File f = new File(path);
 		
 		//Check if we are looking at a file 
-		if(!f.isFile()) throw new IncompleteException("This is not a file");
+		if(!f.isFile()) return false;
 		
 		return f.exists();
 	}
@@ -288,7 +288,7 @@ public class CardModel implements Serializable {
 	 * @param path absolute path where this object will be written
 	 */
 	public static void saveModel(CardModel cm, String path) throws IOException{
-         FileOutputStream fileOut = new FileOutputStream(path);
+		 FileOutputStream fileOut = new FileOutputStream(path);
 	     ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	     out.writeObject(cm);
 	     out.close();
@@ -302,7 +302,7 @@ public class CardModel implements Serializable {
 	public static CardModel loadModel(String path) throws IOException, ClassNotFoundException{
 		CardModel cm = null;
 	
-		FileInputStream fileIn = new FileInputStream("/tmp/employee.ser");
+		FileInputStream fileIn = new FileInputStream(path);
 		ObjectInputStream in = new ObjectInputStream(fileIn);
 		cm = (CardModel) in.readObject();
 		in.close();
@@ -371,7 +371,9 @@ public class CardModel implements Serializable {
 		System.out.println("Searching for card...");
 		for(BusinessCard card : cards){
 			System.out.println("Comparing");
-			if(card.getUI().equals(id))    System.out.println("Found Card"); return card;
+			if(card.getUI().equals(id)){
+				return card;
+			}
 		}
 		System.out.println("Card  not found");
 		throw new IncompleteException("Card does not exist");

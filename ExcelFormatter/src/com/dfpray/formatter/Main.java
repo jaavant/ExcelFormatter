@@ -47,6 +47,8 @@ import javafx.util.Callback;
 
 public class Main extends Application {
 	
+	String filePath;
+	
 	FileChooser fileChooser;
 	CardModel cardModel;
 	ObservableList<BusinessCard> observableList;
@@ -100,6 +102,8 @@ public class Main extends Application {
 	Button addAccBtn;
 	Button delAccBtn;
 	TextField searchTF;
+
+	private Alert globalAlert;
 	
 	
 	public static void main(String args[]){
@@ -114,6 +118,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		globalAlert = null;
+		filePath = null;
 		cardModel = new CardModel();
 		editing = false;
 		
@@ -134,14 +140,13 @@ public class Main extends Application {
         		MenuItem saveMI = new MenuItem("Save");
         		MenuItem openMI = new MenuItem("Open");
         		MenuItem exportMI = new MenuItem("Export");
+        		MenuItem importMI = new MenuItem("Import");
         		MenuItem saveAsMI = new MenuItem("Save As");
-        		MenuItem exitMI = new MenuItem("Exit");
-        		     		
-        		
-        		
-        	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, exportMI,exitMI);
-        		
-        	Menu helpFile = new Menu("Help"); 
+        		MenuItem exitMI = new MenuItem("Exit");     		     		
+        	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
+    		
+        	Menu helpFile = new Menu("Help");
+        	
         menuBar.getMenus().addAll(fileFile, helpFile);
         root.getChildren().add(menuBar);        
         
@@ -543,37 +548,132 @@ public class Main extends Application {
 				System.exit(0);
 		    }
 		});
+		
+		//save as
+		saveAsMI.setOnAction(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent arg0) {
+				fileChooser.getExtensionFilters().clear();
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+				
+				if(observableList.isEmpty()){
+					showDialog("Save as","There Is Nothing to Save","",AlertType.WARNING);
+					return;
+				}
+				
+				File file = fileChooser.showSaveDialog(stage);
+				
+				if(file != null){				
+					ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();
+					
+					//add cards to temp arrayList then send them to cardModel
+					for(BusinessCard card : observableList){
+						sCards.add(card);
+					}			
+					cardModel.setCards(sCards);			
+					try {
+						CardModel.saveModel(cardModel, file.getAbsolutePath());
+						filePath = file.getAbsolutePath();
+					} catch (IOException e) {
+						ioDialog();	
+					}
+				}
+				fileChooser.getExtensionFilters().clear();
+			}		
+		});
+		
+		//TODO
+		saveMI.setOnAction(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent event) {
+				String path = null;
+				fileChooser.getExtensionFilters().clear();
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+								
+				if(CardModel.fileExists(filePath)){
+					path = filePath;
+				}else{
+					File file = fileChooser.showSaveDialog(stage);
+					if(file != null){
+						path = file.getAbsolutePath();
+					}
+				}
+				
+				ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();		
+				//add cards to temp arrayList then send them to cardModel
+				for(BusinessCard card : observableList){
+					sCards.add(card);
+				}			
+				cardModel.setCards(sCards);			
+				try {
+					CardModel.saveModel(cardModel, path);
+					filePath = path;
+				} catch (IOException e) {
+					ioDialog();	
+				}
+				
+			}		
+		});
+		
+		
+		//open
+		openMI.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e) {
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+				
+				Alert lostAlert = new Alert(AlertType.CONFIRMATION);
+				lostAlert.setTitle("Current Progress");
+				
+				if(!observableList.isEmpty()){
+					lostAlert.setHeaderText("Your Current Progress Will Be Lost!");
+					lostAlert.setContentText("If you press OK, your current progress will be lost");
+					Optional<ButtonType> result = lostAlert.showAndWait();
+					if(result.get() != ButtonType.OK) {
+						return;
+					} 
+				}
+				
+				File file = fileChooser.showOpenDialog(stage);
+				
+				if(file != null){
+					try {
+						cardModel = CardModel.loadModel(file.getAbsolutePath());
+						observableList.clear();
+						observableList.addAll(cardModel.getCards());
+	    		    	FXCollections.sort(observableList);
+	    		    	listView.setItems(observableList);
+						filePath = file.getAbsolutePath();
+					} catch (ClassNotFoundException e1) {
+						showDialog("Error","ClasSNoteFoundException","Class could not be found in this file",AlertType.ERROR);
+					} catch (IOException e1) {
+						ioDialog();		
+					}
+				}			
+				fileChooser.getExtensionFilters().clear();
+			}
+		});
+					
 			
 		//Open file and fill viewlist 
-		openMI.setOnAction(new EventHandler<ActionEvent>(){
+		importMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
 				fileChooser.getExtensionFilters().clear();
 				
 				File file = fileChooser.showOpenDialog(stage);
-							
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error");
-				
-				
-				
+
                 if (file != null) {
                 	try {
 						cardModel.addCards(file.getAbsolutePath());
 					} catch (IncompleteException e1) {
-						alert.setHeaderText("IOException");
-						alert.setContentText("File Does Not Exist");
+						showDialog("Error","MalFormatedFileException","The file has been corrupted and not read",AlertType.ERROR);
 					} catch (IOException e1) {
-						alert.setHeaderText("MalFormattedFileException");
-						alert.setContentText("There was a problem opening up this file, it may be corruped or malformatted");
-
-						alert.showAndWait();
+						ioDialog();
 					}
                 	
           
     		    	observableList.addAll(cardModel.getCards());
     		    	FXCollections.sort(observableList);
-    		    	listView.setItems(observableList);
-    		    	
+    		    	listView.setItems(observableList);	    	
                 }
 			}      			
 		});
@@ -604,11 +704,7 @@ public class Main extends Application {
 
 				//Dialog for No contacts to export
 				if(observableList.size() == 0){
-					exportAlert = new Alert(AlertType.WARNING);
-					exportAlert.setTitle("Export To Excel");
-					exportAlert.setHeaderText("There are no Contacts to export!");
-					exportAlert.showAndWait();
-					return;
+					showDialog("Export To Excel","There are no Contacts to export!","",AlertType.WARNING);
 				}
 				//Say all contacts without mandatory info filled will not be exported
 				else if(noMand > 0){
@@ -668,10 +764,7 @@ public class Main extends Application {
 							}
 							
 					} catch (IOException e1) {
-						Alert alert = new Alert(AlertType.ERROR);
-						alert.setTitle("Error");
-						alert.setHeaderText("ExportToExcelException");
-						alert.setContentText("Oops, there was an error trying to process your command");
+						ioDialog();
 					}
 				}
 				fileChooser.getExtensionFilters().clear();
@@ -873,11 +966,7 @@ public class Main extends Application {
 			listView.setItems(observableList);
 
 		} catch (Exception e) {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Error");
-			alert.setHeaderText("EmptyListException | CardNotFoundException");
-			alert.setContentText("There was an error processing your request %2.");
-			alert.showAndWait();
+			showDialog("Error","EmptyListException | CardNotFoundException","There was an error processing your request.",AlertType.ERROR);
 		}
 	}
 	
@@ -943,7 +1032,19 @@ public class Main extends Application {
 		alert.setHeaderText("EmptyListException | CardNotFoundException");
 		alert.setContentText("There was an error processing your request %1.");
 		alert.showAndWait();
-	}	
+	}
+	
+	private void showDialog(String title, String header, String content, AlertType type){
+		globalAlert = new Alert(type);
+		globalAlert.setTitle(title);
+		globalAlert.setHeaderText(header);
+		globalAlert.setContentText(content);
+		globalAlert.showAndWait();	
+	}
+	
+	private void ioDialog(){
+		showDialog("Error","IOException","There was a problem trying to process your request",AlertType.ERROR);
+	}
 	
 	
 	//Colors circled that indicates status of card on listView
