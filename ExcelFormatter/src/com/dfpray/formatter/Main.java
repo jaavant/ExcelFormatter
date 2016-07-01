@@ -831,42 +831,35 @@ public class Main extends Application {
     		});
     	
     	// Removes an account from viewlist and sorts it
-    		try {
-				delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
-					public void handle(ActionEvent arg0){
-						if(observableList.isEmpty()) return; //cant delete nothing
-						
-						BusinessCard card  = listView.getSelectionModel().getSelectedItem();
-						
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Delete Contact");
-						alert.setHeaderText("You are about to delete a, " + card.getCompany().getCompanyName());
-						alert.setContentText("By pressing okay, this contact will permanently be deleted!");
+    		delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
+    			public void handle(ActionEvent arg0){
+    				if(observableList.isEmpty()) return; //cant delete nothing
+    				
+    				BusinessCard card  = listView.getSelectionModel().getSelectedItem();
+    				
+    				Alert alert = new Alert(AlertType.CONFIRMATION);
+    				alert.setTitle("Delete Contact");
+    				alert.setHeaderText("You are about to delete a, " + card.getCompany().getCompanyName());
+    				alert.setContentText("By pressing okay, this contact will permanently be deleted!");
 										
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK){
-							observableList.remove((Object)card); //668
-							listView.setItems(observableList);					
-						}
-					}
-				});
-			} catch (Exception e) {
-				//possible null if listview is empty
-			}
-		
+    				Optional<ButtonType> result = alert.showAndWait();
+    				if (result.get() == ButtonType.OK){
+    					observableList.remove((Object)card); //668
+    					listView.setItems(observableList);					
+    				}
+    			}
+    		});
+	
 		// ListView Listener, changes text fields for the selected B.C in ViewList
-		try {
-			listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
-				@Override
-				public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-					if(newVal == null) return; 					
+
+		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
+			@Override
+			public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
+				if(newVal == null) return; 					
 					setDataFields(newVal.getUI());		 
 				}
-			});
-		} catch (NullPointerException e1) {
-			// Null pointer thrown when list is empty
-		}
-		
+		});
+	
 	
 		//search field than searches listview
 		searchTF.textProperty().addListener(new ChangeListener<Object>() {
