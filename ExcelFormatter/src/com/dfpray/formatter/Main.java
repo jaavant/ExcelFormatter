@@ -25,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -136,20 +137,26 @@ public class Main extends Application {
 		//Menu////////////////////////////////////////
         MenuBar menuBar = new MenuBar();
         menuBar.setStyle("-fx-font:15 Verdana");
-        	Menu fileFile = new Menu("File");
+        	Menu fileMenu = new Menu("File");
         		MenuItem saveMI = new MenuItem("Save");
         		MenuItem openMI = new MenuItem("Open");
         		MenuItem exportMI = new MenuItem("Export");
         		MenuItem importMI = new MenuItem("Import");
         		MenuItem saveAsMI = new MenuItem("Save As");
         		MenuItem exitMI = new MenuItem("Exit");     		     		
-        	fileFile.getItems().addAll( openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
+        	fileMenu.getItems().addAll( openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
     		
-        	Menu helpFile = new Menu("Help");
+        	Menu editMenu = new Menu("Edit");
+        		Menu themeMenu = new Menu("Themes");
+        			CheckMenuItem dfTheme = new CheckMenuItem ("D.F. Pray");
+        			CheckMenuItem orgTheme = new CheckMenuItem ("Original");
+        		themeMenu.getItems().addAll(dfTheme,orgTheme);
+        	editMenu.getItems().addAll(themeMenu);
         	
-        menuBar.getMenus().addAll(fileFile, helpFile);
+        	Menu helpMenu = new Menu("Help");
+        	
+        menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);
         root.getChildren().add(menuBar);        
-        
         
 		//SplitPlane///////////////////////////////////
 		SplitPane splitPane = new SplitPane();
@@ -202,10 +209,8 @@ public class Main extends Application {
 			ScrollPane scrollPane;
 			VBox rightPane = new VBox();
 		    rightPane.setPadding(new Insets(75,2,2,2));
-														//rightPane.setStyle("-fx-background-color: white");
 			rightPane.setAlignment(Pos.TOP_CENTER);
-																//rightPane.setMinSize(1025, 1500);
-			
+																//rightPane.setMinSize(1025, 1500);		
 				//Top Pane///////////////
 				VBox buttonPane = new VBox(5);
 				editBtn = new Button("Edit");
@@ -577,7 +582,6 @@ public class Main extends Application {
 			}		
 		});
 		
-		//TODO
 		saveMI.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
@@ -656,7 +660,7 @@ public class Main extends Application {
 		importMI.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
 				fileChooser.getExtensionFilters().clear();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.xlsx"));
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
 		
 				File file = fileChooser.showOpenDialog(stage);
 
@@ -833,7 +837,9 @@ public class Main extends Application {
     	// Removes an account from viewlist and sorts it
     		delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
     			public void handle(ActionEvent arg0){
-    				if(observableList.isEmpty()) return; //cant delete nothing
+    				if(observableList.isEmpty()){
+    					return; 
+    				}
     				
     				BusinessCard card  = listView.getSelectionModel().getSelectedItem();
     				
@@ -844,7 +850,7 @@ public class Main extends Application {
 										
     				Optional<ButtonType> result = alert.showAndWait();
     				if (result.get() == ButtonType.OK){
-    					observableList.remove((Object)card); //668
+    					observableList.remove((Object)card);
     					listView.setItems(observableList);					
     				}
     			}
@@ -870,7 +876,7 @@ public class Main extends Application {
 		);
 		
 	
-	
+		//scene.getStylesheets().add("application.css");
 	}
 	
 	
@@ -881,8 +887,7 @@ public class Main extends Application {
 	 * Changes the 
 	 * @param card Card which data is to be shown
 	 */
-	protected void setDataFields(UUID id) {
-	                        //= cardModel.getCard(id);
+	protected void setDataFields(UUID id) {               
 				BusinessCard card = null;
 			
 				for(BusinessCard TCard : observableList){
@@ -893,10 +898,7 @@ public class Main extends Application {
 					cardNotFound();
 				}
 				
-				//System.out.println("Entered Method: " + card.getCompany().getCompanyName());
-				
-				busLabel.setText(card.getCompany().getCompanyName());
-				
+				busLabel.setText(card.getCompany().getCompanyName());		
 				comNotesTA.setText(card.getMisc().getCompanyNotes());
 				tfStreet.setText(card.getCompany().getStreetAdd());
 				tfSuitePO.setText(card.getCompany().getSuitPOBox());
@@ -925,10 +927,7 @@ public class Main extends Application {
 				tfWNB.setText(card.getCFInfo().getCf_WillNotBid());
 				tfMbe.setText(card.getMisc().getMbeaffiliations());
 				tfLabor.setText(card.getMisc().getLabor());
-				tfServiceA.setText(card.getMisc().getServiceArea());
-				
-				//System.out.println("Exited Method");
-			
+				tfServiceA.setText(card.getMisc().getServiceArea());	
 	}
 	
 
@@ -1020,11 +1019,7 @@ public class Main extends Application {
 	 * Shows A dialog if card could not be found
 	 */
 	private void cardNotFound() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("EmptyListException | CardNotFoundException");
-		alert.setContentText("There was an error processing your request %1.");
-		alert.showAndWait();
+		showDialog("Error","EmptyListException | CardNotFoundException","There was an error processing your request.",AlertType.ERROR);
 	}
 	
 	private void showDialog(String title, String header, String content, AlertType type){

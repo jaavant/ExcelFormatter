@@ -9,4 +9,5 @@ Tool created to port CardScan "All Information" export to another format, with t
 * poi-3.15-beta1.jar 3
 * xmlbeans-2.6.0.jar 4
 
-
+## External Libraries
+* JavaFX SDK

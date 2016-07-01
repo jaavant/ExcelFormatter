@@ -275,7 +275,7 @@ public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 	}
 	
 	public int compareTo(BusinessCard otherCard){
-		return company.getCompanyName().compareTo(otherCard.getCompany().getCompanyName());
+		return company.getCompanyName().toUpperCase().compareTo(otherCard.getCompany().getCompanyName().toUpperCase());
 	}
 
 }
