@@ -129,7 +129,7 @@ public class CardModel implements Serializable {
 		
 		for(BusinessCard card: cards){
 			if(card.getUI().equals(id)){
-				cards.remove(card);    System.out.println("Removed Card");
+				cards.remove(card);   
 				return;
 			}
 		}
@@ -214,24 +214,26 @@ public class CardModel implements Serializable {
               i = 0;
               while (cellIterator.hasNext()){          	  
                   cell = cellIterator.next();
-                  i = 0;
                   switch (cell.getCellType()){
                   		
                   		case Cell.CELL_TYPE_BLANK:
                   			cardInfo[i] = " ";
+                  			//System.out.println("Nothing");
                   			break;
                 
                   		case Cell.CELL_TYPE_NUMERIC:
                   			cardInfo[i] = (Double.toString(cell.getNumericCellValue()));
+                  			//System.out.println(Double.toString(cell.getNumericCellValue()));
                   			break;
                           
                   		case Cell.CELL_TYPE_STRING:
                   			cardInfo[i] = cell.getStringCellValue();
-                  			break;
+                  			//System.out.println(cell.getStringCellValue());
+                  			break;                  			
                   			
                   }
                   i++;
-              }
+              }         
               //Create card and add it tho this 
               cards.add(new BusinessCard(cardInfo));
           }
@@ -372,15 +374,11 @@ public class CardModel implements Serializable {
 	 * @throws IncompleteException
 	 */
 	public BusinessCard getCard(UUID id) throws IncompleteException{
-		
-		System.out.println("Searching for card...");
 		for(BusinessCard card : cards){
-			System.out.println("Comparing");
 			if(card.getUI().equals(id)){
 				return card;
 			}
 		}
-		System.out.println("Card  not found");
 		throw new IncompleteException("Card does not exist");
 	}
 	

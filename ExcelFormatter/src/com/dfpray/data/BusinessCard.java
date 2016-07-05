@@ -49,6 +49,11 @@ public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 	 * @param i Array of info
 	 */
 	public BusinessCard(String[] i) {
+		contacts = new Contacts();
+		rep = new Representative();
+		company = new Company("*New Company*", " "," "," "," "," "," "," ");
+		cfInfo = new CFInfo();
+		misc = new Misc();
 		arrayToInfo(i);
 		id = UUID.randomUUID();
 		exported = false;

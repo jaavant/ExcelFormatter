@@ -143,7 +143,10 @@ public class Main extends Application {
         		MenuItem saveMI = new MenuItem("Save");
         		MenuItem openMI = new MenuItem("Open");
         		MenuItem exportMI = new MenuItem("Export");
-        		MenuItem importMI = new MenuItem("Import");
+        		Menu importMI = new Menu("Import");
+        			MenuItem impTXT = new MenuItem("TXT 'All Information'");
+        			MenuItem impXLS = new MenuItem("XlSX 'Excel'");
+        		importMI.getItems().addAll(impTXT,impXLS);
         		MenuItem saveAsMI = new MenuItem("Save As");
         		MenuItem exitMI = new MenuItem("Exit");     		     		
         	fileMenu.getItems().addAll(openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
@@ -156,9 +159,9 @@ public class Main extends Application {
         		themeMenu.getItems().addAll(dfTheme,orgTheme);
         	editMenu.getItems().addAll(themeMenu);
         	
-        	Menu helpMenu = new Menu("Help");
+        	//Menu helpMenu = new Menu("Help");
         	
-        menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);
+        menuBar.getMenus().addAll(fileMenu, editMenu); //helpMenu
         root.getChildren().add(menuBar);        
         
 		//SplitPlane///////////////////////////////////
@@ -664,8 +667,8 @@ public class Main extends Application {
 		});
 					
 			
-		//Open file and fill viewlist 
-		importMI.setOnAction(new EventHandler<ActionEvent>(){
+		//Open file txt and fill viewlist 
+		impTXT.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent e) {
 				fileChooser.getExtensionFilters().clear();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
@@ -682,6 +685,28 @@ public class Main extends Application {
 					}
                 	
           
+    		    	observableList.addAll(cardModel.getCards());
+    		    	FXCollections.sort(observableList);
+    		    	listView.setItems(observableList);	    	
+                }
+			}      			
+		});
+		
+		//Open xlsx and fill viewlist 
+		impXLS.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e) {
+				fileChooser.getExtensionFilters().clear();
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files (*.txt)", "*.xlsx"));
+		
+				File file = fileChooser.showOpenDialog(stage);
+
+                if (file != null) {
+                	try {
+						cardModel.importFromExcel(file.getAbsolutePath());
+					} catch (IOException e1) {
+						ioDialog();
+					}
+                	
     		    	observableList.addAll(cardModel.getCards());
     		    	FXCollections.sort(observableList);
     		    	listView.setItems(observableList);	    	
