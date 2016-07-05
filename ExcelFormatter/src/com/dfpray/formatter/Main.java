@@ -37,6 +37,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -49,7 +51,7 @@ import javafx.util.Callback;
 public class Main extends Application {
 	
 	String filePath;
-	
+
 	FileChooser fileChooser;
 	CardModel cardModel;
 	ObservableList<BusinessCard> observableList;
@@ -144,12 +146,13 @@ public class Main extends Application {
         		MenuItem importMI = new MenuItem("Import");
         		MenuItem saveAsMI = new MenuItem("Save As");
         		MenuItem exitMI = new MenuItem("Exit");     		     		
-        	fileMenu.getItems().addAll( openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
+        	fileMenu.getItems().addAll(openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
     		
         	Menu editMenu = new Menu("Edit");
         		Menu themeMenu = new Menu("Themes");
         			CheckMenuItem dfTheme = new CheckMenuItem ("D.F. Pray");
         			CheckMenuItem orgTheme = new CheckMenuItem ("Original");
+        			themeMenu.setDisable(true);
         		themeMenu.getItems().addAll(dfTheme,orgTheme);
         	editMenu.getItems().addAll(themeMenu);
         	
@@ -529,18 +532,23 @@ public class Main extends Application {
 		
 		//BottomPane////////////////////////////////
 		HBox bottomPane = new HBox();
-		bottomPane.setMaxHeight(50);
-		bottomPane.setMinHeight(50);
+		bottomPane.setPadding(new Insets(2, 5, 2, 0));
+		bottomPane.setAlignment(Pos.BOTTOM_RIGHT);
+		Image img = new Image("logo.png");
+		ImageView logo = new ImageView(img);
+		bottomPane.getChildren().addAll(logo); 
+		bottomPane.setMinHeight(60);
 		//bottomPane.setStyle("-fx-background-color: red");
 		root.getChildren().add(bottomPane);
+			
 		////////////////////////////////////////////
 		
 		
 		//Stage
-		
 		stage.setTitle("D.F. Pray Formatter");
+		stage.setMaximized(true);
 		stage.setMinWidth(500);
-		stage.setMinHeight(500);
+		stage.setMinHeight(550);
 		stage.setScene(scene);
 		stage.show();
 		
@@ -692,14 +700,18 @@ public class Main extends Application {
 				ArrayList<BusinessCard> ECards = new ArrayList<BusinessCard>();
 				//add cards for observable list to an arrayList
 				for(BusinessCard card : observableList){
-					if(card.wasExported()){
+					if(card.wasExported()){ 
 						ECards.add(card);
 						exported++;		
 					}									
 					if(card.hasMand()){
 						ACards.add(card);
 					}
-					else noMand++;
+					else{
+						//TODO undo after
+						ACards.add(card);
+						noMand++;
+					}
 				}
 						
 				Alert exportAlert = new Alert(AlertType.CONFIRMATION);
@@ -713,7 +725,7 @@ public class Main extends Application {
 				//Say all contacts without mandatory info filled will not be exported
 				else if(noMand > 0){
 					exportAlert.setHeaderText(noMand	+ " Contact(s) does not have the mandatory infomation filled out!");
-					exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");							
+					//exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");	//TODO						
 					//Show Dialog
 					Optional<ButtonType> result = exportAlert.showAndWait();
 					if(result.get() != ButtonType.OK) {
