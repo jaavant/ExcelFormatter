@@ -729,7 +729,7 @@ public class Main extends Application {
 						ECards.add(card);
 						exported++;		
 					}									
-					if(card.hasMand()){
+					else if(card.hasMand()){
 						ACards.add(card);
 					}
 					else{
@@ -805,7 +805,7 @@ public class Main extends Application {
 							}
 							
 					} catch (IOException e1) {
-						ioDialog();
+						showDialog("Error","IOException","There was a problem trying to process your request, if you are trying to overwrite a file make sure it is closed.",AlertType.ERROR);
 					}
 				}
 				fileChooser.getExtensionFilters().clear();

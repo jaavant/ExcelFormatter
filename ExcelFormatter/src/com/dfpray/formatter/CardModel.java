@@ -3,6 +3,7 @@ package com.dfpray.formatter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +15,11 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -247,6 +252,8 @@ public class CardModel implements Serializable {
 	 * @throws IOException 
 	 */
 	public void exportToExcel(String path) throws IOException{
+		System.out.println("Called ");
+		
 		BusinessCard card; 
 		Cell cell;
 		String[] info;
@@ -258,11 +265,43 @@ public class CardModel implements Serializable {
 	    @SuppressWarnings("resource")
 		XSSFWorkbook workbook = new XSSFWorkbook();      
 	    XSSFSheet sheet = workbook.createSheet("Business Data");
-	      
+	    String[] tmpArray = {"CompanyName", "ContactFirstName",	"ContactLastName", "Title", "Street Address", "Suite/PO Box",
+	    					"City",	"State", "ZipCode",	"Country",	"PhoneNumber",	"Extension",	"MobilePhone", 	"FaxNumber",
+	    					"EmailAddress",	"Website",	"CsiCodes",	"CompanyFunction",	"MBEAffiliations",	"Labor",	"ServiceArea",	
+	    					"CompanyNotes",	"ContactLists",	"CF_Alternate Email", "CF_Do Not Use", "CF_Supplier/Manuf", "CF_Trade",	"CF_Union Value", 
+	    					"CF_Unlicensed States", "CF_Will Not Bid"};    
+	    
+	    Font headerFont = workbook.createFont();
+        headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+	    
+	    XSSFCellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFont(headerFont);
+       
+        
+        XSSFCellStyle cellStyle2 = workbook.createCellStyle();
+        cellStyle2.setFont(headerFont);
+        cellStyle2.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle2.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        
+	    //Write Template
+	    
+	    row = sheet.createRow(0);
+	    for(int k = 0; k < 30; k++){
+	    	cell = row.createCell(k);
+	    	cell.setCellStyle(cellStyle);
+	    	
+	    	if(k == 0 || k == 13 || k == 14 || k ==16 || k == 17){
+	    		cell.setCellStyle(cellStyle2);
+	    	}
+	    	
+	    	cell.setCellValue(tmpArray[k]);
+	    }
+	    
+	    
 	    //Row = Business
-	    for(int i = 0; i < amtCards(); i++){
+	    for(int i = 1; i <= amtCards(); i++){
 	    	row = sheet.createRow(i);
-	    	card = cards.get(i);
+	    	card = cards.get(i-1);
 	    	info = card.infoToArray();
 	    	  
 	        //Create Column = Data for each Business
@@ -284,7 +323,17 @@ public class CardModel implements Serializable {
 	    }
 	      	      
 	    //Create file system using specific name
-	    FileOutputStream out = new FileOutputStream(new File(path));      
+	    FileOutputStream out;
+		try {
+			out = new FileOutputStream(new File(path));
+		} catch (FileNotFoundException e) {
+			
+			//Reset cards to not exported
+			for(BusinessCard cardR : cards){
+				cardR.setExported(false);
+			}
+			throw new IOException();
+		}      
 	    workbook.write(out);
 	    out.close();	
 
