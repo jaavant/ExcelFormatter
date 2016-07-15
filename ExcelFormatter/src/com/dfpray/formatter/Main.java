@@ -837,8 +837,7 @@ public class Main extends Application {
     		});
     		
     	//Adds an account to the ViewList
-    		addAccBtn.setOnAction(new EventHandler<ActionEvent>(){
-    			public void handle(ActionEvent arg0){
+    		addAccBtn.setOnAction(a -> {
     				BusinessCard card = new BusinessCard();
 
 					observableList.add(card);
@@ -849,13 +848,10 @@ public class Main extends Application {
 
 					listView.getSelectionModel().select(card);
 					listView.scrollTo(card);	
-    				
-    			}
     		});
     	
     	// Removes an account from viewlist and sorts it
-    		delAccBtn.setOnAction(new EventHandler<ActionEvent>(){
-    			public void handle(ActionEvent arg0){
+    		delAccBtn.setOnAction(d ->	{
     				if(observableList.isEmpty()){
     					return; 
     				}
@@ -872,7 +868,6 @@ public class Main extends Application {
     					observableList.remove((Object)card);
     					listView.setItems(observableList);					
     				}
-    			}
     		});
 	
 		// ListView Listener, changes text fields for the selected B.C in ViewList
@@ -887,13 +882,7 @@ public class Main extends Application {
 	
 	
 		//search field than searches listview
-		searchTF.textProperty().addListener(new ChangeListener<Object>() {
-		      public void changed(ObservableValue<?> observable, Object oldVal, Object newVal) {
-		        search((String) oldVal, (String) newVal);
-		      }
-		}
-		);
-		
+		searchTF.textProperty().addListener((o,ov,nv) -> search((String) ov, (String) nv));	
 	
 		//scene.getStylesheets().add("application.css");
 	}
@@ -1019,12 +1008,12 @@ public class Main extends Application {
 	    String value = newVal.toUpperCase();
 	    ObservableList<BusinessCard> subentries = FXCollections.observableArrayList();
 	    
-	    for (BusinessCard card : listView.getItems()) {      
-	      if (!card.toString().toUpperCase().contains(value)){
-	        continue;
-	      }
-	      subentries.add(card);
-	    }
+	    listView.getItems().forEach(c -> {
+	    	 if(c.toString().toUpperCase().contains(value)){
+	    		 subentries.add(c);
+	 	     } 	 
+	    });
+
 	    listView.setItems(subentries);
 	   
 	    //effect to select first thing in list
