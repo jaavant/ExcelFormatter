@@ -138,12 +138,12 @@ public class CardModel implements Serializable {
 	public void removeCard(UUID id) throws EmptyListException, CardNotFoundException{
 		if(cards.size() == 0) throw new EmptyListException();
 		
-		for(BusinessCard card: cards){
-			if(card.getUI().equals(id)){
-				cards.remove(card);   
+		cards.forEach(c -> {
+			if(c.getUI().equals(id)){
+				cards.remove(c);   
 				return;
 			}
-		}
+		});
 		throw new CardNotFoundException();
 	}
 	
@@ -161,7 +161,7 @@ public class CardModel implements Serializable {
 	 */
 	public void updateCard(UUID id, Contacts c, Representative r, Company com, CFInfo cf, Misc m)throws EmptyListException, CardNotFoundException{
 		if(cards.size() == 0) throw new EmptyListException();		
-				
+		
 		for(BusinessCard card : cards){
 			if(card.getUI().equals(id)){
 				card.updateCard(c, r, com, cf, m);
@@ -417,8 +417,6 @@ public class CardModel implements Serializable {
 		        counter++;
 		    } 
 		}
-		
-		//System.out.println("Number of  quotation marks: " + counter);
 		return counter;
 	}
 	

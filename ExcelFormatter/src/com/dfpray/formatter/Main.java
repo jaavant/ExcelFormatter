@@ -872,17 +872,16 @@ public class Main extends Application {
 	
 		// ListView Listener, changes text fields for the selected B.C in ViewList
 
-		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BusinessCard>() {
-			@Override
-			public void changed(ObservableValue<? extends BusinessCard> arg0, BusinessCard oldval,BusinessCard newVal) {
-				if(newVal == null) return; 					
-					setDataFields(newVal.getUI());		 
+		listView.getSelectionModel().selectedItemProperty().addListener((a, ov, nv) -> {
+				if(nv == null){
+					return; 					
 				}
+				setDataFields(nv.getUI());		 
 		});
 	
 	
 		//search field than searches listview
-		searchTF.textProperty().addListener((o,ov,nv) -> search((String) ov, (String) nv));	
+		searchTF.textProperty().addListener((a,ov,nv) -> search((String) ov, (String) nv));	
 	
 		//scene.getStylesheets().add("application.css");
 	}
