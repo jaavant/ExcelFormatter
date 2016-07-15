@@ -681,8 +681,7 @@ public class Main extends Application {
 		});
 		
 		//Open xlsx and fill viewlist 
-		impXLS.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e) {
+		impXLS.setOnAction(e -> {
 				fileChooser.getExtensionFilters().clear();
 				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files (*.txt)", "*.xlsx"));
 		
@@ -698,20 +697,18 @@ public class Main extends Application {
     		    	observableList.addAll(cardModel.getCards());
     		    	FXCollections.sort(observableList);
     		    	listView.setItems(observableList);	    	
-                }
-			}      			
+                }      			
 		});
 		
 		//Export to excel 
-		exportMI.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e){
+		exportMI.setOnAction(ei -> {
 				int noMand = 0;
 				int exported = 0;
 				String path;
 
 				ArrayList<BusinessCard> ACards = new ArrayList<BusinessCard>();
 				ArrayList<BusinessCard> ECards = new ArrayList<BusinessCard>();
-				//add cards for observable list to an arrayList
+				//add cards for observable list to an arrayList			
 				for(BusinessCard card : observableList){
 					if(card.wasExported()){ 
 						ECards.add(card);
@@ -800,12 +797,10 @@ public class Main extends Application {
 				
 				//Make sure colored circle is updated for the card
 				listView.refresh(); 
-			}
 		});
 		
 		//Edit button which disables and enables fields
-    		editBtn.setOnAction(new EventHandler<ActionEvent>(){
-				public void handle(ActionEvent arg0) {
+    		editBtn.setOnAction(e -> {
 					if(observableList.isEmpty()) return; //so user can't edit a non existent page
 					
 					//not editing contact
@@ -839,7 +834,6 @@ public class Main extends Application {
 					}
 					
 					editing = !editing;
-				}
     		});
     		
     	//Adds an account to the ViewList
