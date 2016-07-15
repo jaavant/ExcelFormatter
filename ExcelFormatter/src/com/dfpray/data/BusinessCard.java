@@ -259,7 +259,7 @@ public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 	 */
 	public boolean hasMand(){
 		if(company.getCompanyName().trim().length() > 0){                      
-			if(contacts.getFaxNumber().trim().length() > 6)						
+			if(contacts.getFaxNumber().trim().length() > 6){					
 				if(contacts.getEmailAddress().indexOf('@') >= 0){				
 					if(misc.getCsiCodes().trim().length() > 0){					
 						if(company.getCompanyFunction().trim().length() > 0){   
@@ -267,6 +267,7 @@ public class BusinessCard implements Comparable<BusinessCard>, Serializable {
 						}
 					}
 				}
+			}
 		}
 		return false;
 	}

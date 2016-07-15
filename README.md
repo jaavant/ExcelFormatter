@@ -1,5 +1,7 @@
 # ExcelFormatter
-Tool created to port CardScan "All Information" export to another format, with the ability to add/remove information. 
+Tool created to port CardScan "All Information" export to iSqFT's format, with the ability to add/remove information. 
+Allows CardScan "All Information" TXT file and iSqFT excel format import.
+
 
 ## Referenced Libraries 
 ######Apache POI

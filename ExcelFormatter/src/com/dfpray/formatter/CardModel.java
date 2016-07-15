@@ -45,6 +45,12 @@ public class CardModel implements Serializable {
 	}
 	
 	
+	/** 
+	 * Adds cards from a path from a txt file
+	 * @param path Absolute Path to File
+	 * @throws IncompleteException
+	 * @throws IOException
+	 */
 	public void addCards(String path) throws IncompleteException, IOException{
 		this.cards.addAll(parseRAWCards(path));
 		checkCollision();

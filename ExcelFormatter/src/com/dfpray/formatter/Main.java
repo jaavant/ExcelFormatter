@@ -39,6 +39,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -231,7 +234,7 @@ public class Main extends Application {
 				String labelStyle = "-fx-font: 12 Verdana;";
 			
 		
-				busLabel = new Label("Company Name");
+				busLabel = new Label(" ");
 				busLabel.setStyle("-fx-font: 30 Verdana;");
 				busLabel.setPadding(new Insets(10,0,0,0));
 				busLabel.setDisable(true);
@@ -240,8 +243,7 @@ public class Main extends Application {
 					comNotesTA.setWrapText(true);
 					comNotesTA.setStyle("-fx-font:15 Verdana");
 					comNotesTA.setPadding(new Insets(5,10,5,10));
-					
-								
+											
 				comNotesTP = new TitledPane("Company Notes",comNotesTA);
 				comNotesTP.setDisable(true);
 				comNotesTP.setMaxWidth(750);
@@ -559,40 +561,35 @@ public class Main extends Application {
 		//Event Handlers///////
 		
 		//exit
-		exitMI.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e) {
-				System.exit(0);
-		    }
-		});
+		exitMI.setOnAction(e -> System.exit(0));			
+		exitMI.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 		
 		//save as
-		saveAsMI.setOnAction(new EventHandler<ActionEvent>(){
-			@Override
-			public void handle(ActionEvent arg0) {
-				fileChooser.getExtensionFilters().clear();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+		saveAsMI.setOnAction(e -> {
+			fileChooser.getExtensionFilters().clear();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+			
+			File file = fileChooser.showSaveDialog(stage);
+			
+			if(file != null){				
+				ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();
 				
-				File file = fileChooser.showSaveDialog(stage);
-				
-				if(file != null){				
-					ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();
-					
-					//add cards to temp arrayList then send them to cardModel
-					for(BusinessCard card : observableList){
-						sCards.add(card);
-					}			
-					cardModel.setCards(sCards);			
-					try {
-						CardModel.saveModel(cardModel, file.getAbsolutePath());
-						filePath = file.getAbsolutePath();
-					} catch (IOException e) {
-						ioDialog();	
-					}
+				//add cards to temp arrayList then send them to cardModel
+				for(BusinessCard card : observableList){
+					sCards.add(card);
+				}			
+				cardModel.setCards(sCards);			
+				try {
+					CardModel.saveModel(cardModel, file.getAbsolutePath());
+					filePath = file.getAbsolutePath();
+				} catch (IOException ex) {
+					ioDialog();	
 				}
-				fileChooser.getExtensionFilters().clear();
-			}		
+			}
+			fileChooser.getExtensionFilters().clear();
 		});
 		
+		//save
 		saveMI.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
@@ -627,6 +624,8 @@ public class Main extends Application {
 			}		
 		});
 		
+		
+		saveMI.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
 		
 		//open
 		openMI.setOnAction(new EventHandler<ActionEvent>(){
