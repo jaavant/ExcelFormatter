@@ -589,105 +589,95 @@ public class Main extends Application {
 		});
 		
 		//save
-		saveMI.setOnAction(new EventHandler<ActionEvent>(){
-			@Override
-			public void handle(ActionEvent event) {
-				String path = null;
-				fileChooser.getExtensionFilters().clear();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
-								
-				if(CardModel.fileExists(filePath)){
-					path = filePath;
-				}else{			
-					File file = fileChooser.showSaveDialog(stage);
-					if(file != null){
-						path = file.getAbsolutePath();
-					}else{
-						return;
-					}
+		saveMI.setOnAction(e -> {
+			String path = null;
+			fileChooser.getExtensionFilters().clear();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+							
+			if(CardModel.fileExists(filePath)){
+				path = filePath;
+			}else{			
+				File file = fileChooser.showSaveDialog(stage);
+				if(file != null){
+					path = file.getAbsolutePath();
+				}else{
+					return;
 				}
-				
-				ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();		
-				//add cards to temp arrayList then send them to cardModel
-				for(BusinessCard card : observableList){
-					sCards.add(card);
-				}			
-				cardModel.setCards(sCards);			
-				try {
-					CardModel.saveModel(cardModel, path);
-					filePath = path;
-				} catch (IOException e) {
-					ioDialog();
-				}
-				fileChooser.getExtensionFilters().clear();
-			}		
+			}
+			
+			ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();		
+			//add cards to temp arrayList then send them to cardModel
+			observableList.forEach(c -> sCards.add(c));
+			
+			cardModel.setCards(sCards);			
+			try {
+				CardModel.saveModel(cardModel, path);
+				filePath = path;
+			} catch (IOException ex) {
+				ioDialog();
+			}
+			fileChooser.getExtensionFilters().clear();
 		});
-		
-		
 		saveMI.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
 		
 		//open
-		openMI.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e) {
-				fileChooser.getExtensionFilters().clear();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
-				
-				Alert lostAlert = new Alert(AlertType.CONFIRMATION);
-				lostAlert.setTitle("Current Progress");
-				
-				if(!observableList.isEmpty()){
-					lostAlert.setHeaderText("Your Current Progress Will Be Lost!");
-					lostAlert.setContentText("If you press OK, your current progress will be lost");
-					Optional<ButtonType> result = lostAlert.showAndWait();
-					if(result.get() != ButtonType.OK) {
-						return;
-					} 
-				}
-				
-				File file = fileChooser.showOpenDialog(stage);
-				
-				if(file != null){
-					try {
-						cardModel = CardModel.loadModel(file.getAbsolutePath());
-						observableList.clear();
-						observableList.addAll(cardModel.getCards());
-	    		    	FXCollections.sort(observableList);
-	    		    	listView.setItems(observableList);
-						filePath = file.getAbsolutePath();
-					} catch (ClassNotFoundException e1) {
-						showDialog("Error","ClasSNoteFoundException","Class could not be found in this file",AlertType.ERROR);
-					} catch (IOException e1) {
-						ioDialog();		
-					}
-				}			
-				fileChooser.getExtensionFilters().clear();
+		openMI.setOnAction(e -> {
+			fileChooser.getExtensionFilters().clear();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+			
+			Alert lostAlert = new Alert(AlertType.CONFIRMATION);
+			lostAlert.setTitle("Current Progress");
+			
+			if(!observableList.isEmpty()){
+				lostAlert.setHeaderText("Your Current Progress Will Be Lost!");
+				lostAlert.setContentText("If you press OK, your current progress will be lost");
+				Optional<ButtonType> result = lostAlert.showAndWait();
+				if(result.get() != ButtonType.OK) {
+					return;
+				} 
 			}
+			
+			File file = fileChooser.showOpenDialog(stage);
+			
+			if(file != null){
+				try {
+					cardModel = CardModel.loadModel(file.getAbsolutePath());
+					observableList.clear();
+					observableList.addAll(cardModel.getCards());
+    		    	FXCollections.sort(observableList);
+    		    	listView.setItems(observableList);
+					filePath = file.getAbsolutePath();
+				} catch (ClassNotFoundException e1) {
+					showDialog("Error","ClasSNoteFoundException","Class could not be found in this file",AlertType.ERROR);
+				} catch (IOException e1) {
+					ioDialog();		
+				}
+			}			
+			fileChooser.getExtensionFilters().clear();
 		});
 					
 			
 		//Open file txt and fill viewlist 
-		impTXT.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent e) {
-				fileChooser.getExtensionFilters().clear();
-				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-		
-				File file = fileChooser.showOpenDialog(stage);
+		impTXT.setOnAction(e -> {
+			fileChooser.getExtensionFilters().clear();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+	
+			File file = fileChooser.showOpenDialog(stage);
 
-                if (file != null) {
-                	try {
-						cardModel.addCards(file.getAbsolutePath());
-					} catch (IncompleteException e1) {
-						showDialog("Error","MalFormatedFileException","The file has been corrupted and not read",AlertType.ERROR);
-					} catch (IOException e1) {
-						ioDialog();
-					}
-                	
-          
-    		    	observableList.addAll(cardModel.getCards());
-    		    	FXCollections.sort(observableList);
-    		    	listView.setItems(observableList);	    	
-                }
-			}      			
+            if (file != null) {
+            	try {
+					cardModel.addCards(file.getAbsolutePath());
+				} catch (IncompleteException e1) {
+					showDialog("Error","MalFormatedFileException","The file has been corrupted and not read",AlertType.ERROR);
+				} catch (IOException e1) {
+					ioDialog();
+				}
+            	
+      
+		    	observableList.addAll(cardModel.getCards());
+		    	FXCollections.sort(observableList);
+		    	listView.setItems(observableList);	
+            }
 		});
 		
 		//Open xlsx and fill viewlist 
