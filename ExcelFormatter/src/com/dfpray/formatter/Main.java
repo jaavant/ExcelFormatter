@@ -575,9 +575,8 @@ public class Main extends Application {
 				ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();
 				
 				//add cards to temp arrayList then send them to cardModel
-				for(BusinessCard card : observableList){
-					sCards.add(card);
-				}			
+				observableList.forEach(c -> sCards.add(c));
+				
 				cardModel.setCards(sCards);			
 				try {
 					CardModel.saveModel(cardModel, file.getAbsolutePath());
