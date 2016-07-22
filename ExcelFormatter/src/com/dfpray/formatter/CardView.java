@@ -15,6 +15,8 @@ import com.dfpray.data.Representative;
 import com.dfpray.exception.IncompleteException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,12 +52,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class View extends Scene {
+public class CardView extends Scene {
 	
 	
 	Stage stage;
 	private String filePath;
-
 	private FileChooser fileChooser;
 	private CardModel cardModel;
 	private ObservableList<BusinessCard> observableList;
@@ -101,6 +102,9 @@ public class View extends Scene {
 	private TextField tfLabor;	
 	private TextField tfServiceA;
 
+	MenuItem saveAsMI;
+	MenuItem saveMI;
+	
 	private boolean editing;
 	private Button editBtn;
 	
@@ -112,12 +116,14 @@ public class View extends Scene {
 	
 	private static VBox root;
 	
+	private MenuItem openMI;
+	
 	//Static initializer
 	static {
 		root = new VBox();
 	}
 
-	public View(Stage stage) {	
+	public CardView(Stage stage) {	
 		super(root, 1300, 900);		
 		this.stage = stage;
 		initialize();
@@ -140,14 +146,14 @@ public class View extends Scene {
         MenuBar menuBar = new MenuBar();
         menuBar.setStyle("-fx-font:15 Verdana");
         	Menu fileMenu = new Menu("File");
-        		MenuItem saveMI = new MenuItem("Save");
-        		MenuItem openMI = new MenuItem("Open");
+        		saveMI = new MenuItem("Save");
+        		openMI = new MenuItem("Open");
         		MenuItem exportMI = new MenuItem("Export");
         		Menu importMI = new Menu("Import");
         			MenuItem impTXT = new MenuItem("TXT 'All Information'");
         			MenuItem impXLS = new MenuItem("XlSX 'Excel'");
         		importMI.getItems().addAll(impTXT,impXLS);
-        		MenuItem saveAsMI = new MenuItem("Save As");
+        			saveAsMI = new MenuItem("Save As");
         		MenuItem exitMI = new MenuItem("Exit");     		     		
         	fileMenu.getItems().addAll(openMI, saveMI, saveAsMI, importMI, exportMI,exitMI);
     		
@@ -549,99 +555,8 @@ public class View extends Scene {
 		//exit
 		exitMI.setOnAction(e -> System.exit(0));			
 		exitMI.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
-		
-		//save as
-		saveAsMI.setOnAction(e -> {
-			fileChooser.getExtensionFilters().clear();
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
-			
-			File file = fileChooser.showSaveDialog(stage);
-			
-			if(file != null){				
-				ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();
-				
-				//add cards to temp arrayList then send them to cardModel
-				observableList.forEach(c -> sCards.add(c));
-				
-				cardModel.setCards(sCards);			
-				try {
-					CardModel.saveModel(cardModel, file.getAbsolutePath());
-					filePath = file.getAbsolutePath();
-				} catch (IOException ex) {
-					ioDialog();	
-				}
-			}
-			fileChooser.getExtensionFilters().clear();
-		});
-		
-		//save
-		saveMI.setOnAction(e -> {
-			String path = null;
-			fileChooser.getExtensionFilters().clear();
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
-							
-			if(CardModel.fileExists(filePath)){
-				path = filePath;
-			}else{			
-				File file = fileChooser.showSaveDialog(stage);
-				if(file != null){
-					path = file.getAbsolutePath();
-				}else{
-					return;
-				}
-			}
-			
-			ArrayList<BusinessCard> sCards = new ArrayList<BusinessCard>();		
-			//add cards to temp arrayList then send them to cardModel
-			observableList.forEach(c -> sCards.add(c));
-			
-			cardModel.setCards(sCards);			
-			try {
-				CardModel.saveModel(cardModel, path);
-				filePath = path;
-			} catch (IOException ex) {
-				ioDialog();
-			}
-			fileChooser.getExtensionFilters().clear();
-		});
 		saveMI.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-		
-		//open
-		openMI.setOnAction(e -> {
-			fileChooser.getExtensionFilters().clear();
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
 			
-			Alert lostAlert = new Alert(AlertType.CONFIRMATION);
-			lostAlert.setTitle("Current Progress");
-			
-			if(!observableList.isEmpty()){
-				lostAlert.setHeaderText("Your Current Progress Will Be Lost!");
-				lostAlert.setContentText("If you press OK, your current progress will be lost");
-				Optional<ButtonType> result = lostAlert.showAndWait();
-				if(result.get() != ButtonType.OK) {
-					return;
-				} 
-			}
-			
-			File file = fileChooser.showOpenDialog(stage);
-			
-			if(file != null){
-				try {
-					cardModel = CardModel.loadModel(file.getAbsolutePath());
-					observableList.clear();
-					observableList.addAll(cardModel.getCards());
-    		    	FXCollections.sort(observableList);
-    		    	listView.setItems(observableList);
-					filePath = file.getAbsolutePath();
-				} catch (ClassNotFoundException e1) {
-					showDialog("Error","ClasSNoteFoundException","Class could not be found in this file",AlertType.ERROR);
-				} catch (IOException e1) {
-					ioDialog();		
-				}
-			}			
-			fileChooser.getExtensionFilters().clear();
-		});
-					
 			
 		//Open file txt and fill viewlist 
 		impTXT.setOnAction(e -> {
@@ -704,8 +619,6 @@ public class View extends Scene {
 						ACards.add(card);
 					}
 					else{
-						//TODO undo after
-						//ACards.add(card);
 						noMand++;
 					}
 				}
@@ -721,7 +634,7 @@ public class View extends Scene {
 				//Say all contacts without mandatory info filled will not be exported
 				else if(noMand > 0){
 					exportAlert.setHeaderText(noMand	+ " Contact(s) does not have the mandatory infomation filled out!");
-					exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");	//TODO						
+					exportAlert.setContentText("By pressing OK, only Contact's with the mandatory information will be exported");							
 					//Show Dialog
 					Optional<ButtonType> result = exportAlert.showAndWait();
 					if(result.get() != ButtonType.OK) {
@@ -871,6 +784,84 @@ public class View extends Scene {
 	
 	}
 	
+	/** 
+	 * Adds the cards to the list of cards and changes default directory of file
+	 * @param cards
+	 */
+	public void addList(ArrayList<BusinessCard> cards, File file){ //TODO  
+		observableList.clear();
+		observableList.addAll(cards);
+		FXCollections.sort(observableList);
+		listView.setItems(observableList);
+		filePath = file.getAbsolutePath();
+	}
+	
+	/** 
+	 * Returns an ArrayList of BusinessCards 
+	 * @return BusinessCards from View
+	 */
+	public ArrayList<BusinessCard> getCards(){
+		ArrayList<BusinessCard>  list = new ArrayList<>();
+		
+		observableList.forEach(bc -> {
+			list.add(bc);
+		});
+		return list;
+	}
+	
+	/**
+	 * Gets path of where to save File
+	 * @return File
+	 */
+	public File saveFile(){
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+		
+		File file = fileChooser.showSaveDialog(stage);
+		fileChooser.getExtensionFilters().clear();	
+		
+		return file;	
+	}
+	
+	
+	/**
+	 * Returns File that user has chosen to open
+	 * @return File or Null if user has canceled opening the file or the file couldn't be opened
+	 */
+	public File openFile(){
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DFPRAY files (*.dfp)", "*.dfp"));
+		
+		Alert lostAlert = new Alert(AlertType.CONFIRMATION);
+		lostAlert.setTitle("Current Progress");
+		
+		if(!observableList.isEmpty()){
+			lostAlert.setHeaderText("Your Current Progress Will Be Lost!");
+			lostAlert.setContentText("If you press OK, your current progress will be lost");
+			Optional<ButtonType> result = lostAlert.showAndWait();
+			if(result.get() != ButtonType.OK) {
+				return null;
+			} 
+		}
+		
+		File file = fileChooser.showOpenDialog(stage);			
+		fileChooser.getExtensionFilters().clear();
+		
+		return file;
+	}
+	
+	public void addSaveAsListener(EventHandler<ActionEvent> listener){
+		saveAsMI.setOnAction(listener);
+	}
+	
+	public void addOpenListener(EventHandler<ActionEvent> listener){
+		openMI.setOnAction(listener);
+	}
+	
+	public void addSaveListener(EventHandler<ActionEvent> listener){
+		saveMI.setOnAction(listener);
+	}
+	
 	/**
 	 * Changes the 
 	 * @param card Card which data is to be shown
@@ -1004,7 +995,7 @@ public class View extends Scene {
 	    	listView.scrollTo(0);
 	    }
 	  }
-	
+	//TODO
 	/**
 	 * Shows A dialog if card could not be found
 	 */
@@ -1012,7 +1003,7 @@ public class View extends Scene {
 		showDialog("Error","EmptyListException | CardNotFoundException","There was an error processing your request.",AlertType.ERROR);
 	}
 	
-	private void showDialog(String title, String header, String content, AlertType type){
+	public void showDialog(String title, String header, String content, AlertType type){
 		globalAlert = new Alert(type);
 		globalAlert.setTitle(title);
 		globalAlert.setHeaderText(header);
@@ -1020,11 +1011,11 @@ public class View extends Scene {
 		globalAlert.showAndWait();	
 	}
 	
-	private void ioDialog(){
+	public void ioDialog(){
 		showDialog("Error","IOException","There was a problem trying to process your request",AlertType.ERROR);
 	}
 	
-	
+
 	//Colors circled that indicates status of card on listView
     static class ColorCell extends ListCell<BusinessCard> {
     	private final Circle manDone = new Circle(3);
@@ -1060,6 +1051,14 @@ public class View extends Scene {
             }
         }
     }
+    
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 
 
 

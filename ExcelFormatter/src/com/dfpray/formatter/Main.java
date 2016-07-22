@@ -11,8 +11,13 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
-		View scene = new View(stage);
+	public void start(Stage stage) throws Exception {		
+		
+		CardModel model = new CardModel();
+		
+		CardView scene = new CardView(stage);
+		
+		CardController controller= new CardController(model,scene);
 		
 		stage.setTitle("D.F. Pray Formatter");
 		stage.setMaximized(true);

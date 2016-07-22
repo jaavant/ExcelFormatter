@@ -344,15 +344,15 @@ public class CardModel implements Serializable {
 	    out.close();	
 
 	}
-
+ //TODO save arraylist not the model
 	/**
 	 * Serializes and write this to a path
 	 * @param path absolute path where this object will be written
 	 */
-	public static void saveModel(CardModel cm, String path) throws IOException{
+	public void saveCards(String path) throws IOException{
 		 FileOutputStream fileOut = new FileOutputStream(path);
 	     ObjectOutputStream out = new ObjectOutputStream(fileOut);
-	     out.writeObject(cm);
+	     out.writeObject(this.cards);
 	     out.close();
 	     fileOut.close();
 	}
@@ -361,15 +361,16 @@ public class CardModel implements Serializable {
 	 * Reads a serialized file of this from a path
 	 * @param path Absolute path of file
 	 */
-	public static CardModel loadModel(String path) throws IOException, ClassNotFoundException{
-		CardModel cm = null;
+	@SuppressWarnings("unchecked")
+	public ArrayList<BusinessCard> loadCards(String path) throws IOException, ClassNotFoundException{
+		ArrayList<BusinessCard> crds = null;
 	
 		FileInputStream fileIn = new FileInputStream(path);
 		ObjectInputStream in = new ObjectInputStream(fileIn);
-		cm = (CardModel) in.readObject();
+		crds = (ArrayList<BusinessCard>) in.readObject();
 		in.close();
 		fileIn.close();
-		return cm;
+		return crds;
 	}
 	
 	/** 
